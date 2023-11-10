@@ -74,7 +74,7 @@
 #' @author Annika Swenne
 #' @export
 
-ds.gamlss <- function(formula = NULL, sigma.formula = '~1', nu.formula = '~1', tau.formula = '~1',
+ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.formula = ~1,
                       family = 'NO()', data = NULL, checks = FALSE, method = 'RS', mu.fix = FALSE, sigma.fix = FALSE,
                       nu.fix = FALSE, tau.fix = FALSE, control = c(0.001, 20, 1, 1, 1, 1, Inf),
                       i.control = c(0.001, 50, 30, 0.001), autostep = TRUE, datasource = NULL){
@@ -214,7 +214,8 @@ ds.gamlss <- function(formula = NULL, sigma.formula = '~1', nu.formula = '~1', t
   ## Identify the correct dimension for start betas via calling first component of gamlssDS
   cally1 <- call('gamlssDS1', formula=formula.trans, sigma.formula=sigma.formula.trans, 
                  nu.formula=nu.formula.trans, tau.formula=tau.formula.trans,
-                 family=family.trans, data=data,
+                 family=family.trans, data=data, mu.fix=mu.fix, sigma.fix=sigma.fix, 
+                 nu.fix=nu.fix, tau.fix=tau.fix,
                  control=control.trans, i.control=i.control.trans)
   
   study.summary.0 <- DSI::datashield.aggregate(datasources, cally1)
@@ -607,6 +608,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = '~1', nu.formula = '~1', t
           ## call second component of gamlssDS to generate matrices and vectors for WLS to estimate beta
           cally2 <- call('gamlssDS2', parameter=parameter, formula=formula.trans, sigma.formula=sigma.formula.trans, 
                          nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data, 
+                         mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                          mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                          nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                          control=control.trans, i.control=i.control.trans)
@@ -702,6 +704,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = '~1', nu.formula = '~1', t
             ## call third component of gamlssDS to generate matrices and vectors for PWLS to estimate gamma
             cally3 <- call('gamlssDS3', parameter=parameter, smoother=s, formula=formula.trans, sigma.formula=sigma.formula.trans, 
                            nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data, 
+                           mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                            mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                            nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                            mu.gamma.vect=mu.gamma.vect.trans, sigma.gamma.vect=sigma.gamma.vect.trans,
@@ -766,6 +769,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = '~1', nu.formula = '~1', t
                   # call fourth component of gamlssDS to generate matrices and vectors for PWLS to estimate gamma
                   cally4 <- call('gamlssDS4', parameter=parameter, smoother=s, formula=formula.trans, sigma.formula=sigma.formula.trans, 
                                  nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data, 
+                                 mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                                  mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                                  nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                                  mu.gamma.vect=mu.gamma.vect.trans, sigma.gamma.vect=sigma.gamma.vect.trans,
@@ -829,7 +833,8 @@ ds.gamlss <- function(formula = NULL, sigma.formula = '~1', nu.formula = '~1', t
             
             ## call fifth component of gamlssDS to check convergence of backfitting
             cally5 <- call('gamlssDS5', parameter=parameter, formula=formula.trans, sigma.formula=sigma.formula.trans, 
-                           nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data, 
+                           nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data,
+                           mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                            mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                            nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                            mu.gamma.vect=mu.gamma.vect.trans, sigma.gamma.vect=sigma.gamma.vect.trans,
@@ -854,6 +859,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = '~1', nu.formula = '~1', t
         #*A.1.ii) Stopping criterion inner iteration ----
         cally6 <- call('gamlssDS6', parameter=parameter, formula=formula.trans, sigma.formula=sigma.formula.trans, 
                        nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data, 
+                       mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                        mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                        nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                        mu.gamma.vect=mu.gamma.vect.trans, sigma.gamma.vect=sigma.gamma.vect.trans,
@@ -876,6 +882,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = '~1', nu.formula = '~1', t
             for(autostep.count in 1:5){
               cally6 <- call('gamlssDS6', parameter=parameter, formula=formula.trans, sigma.formula=sigma.formula.trans, 
                              nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data, 
+                             mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                              mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                              nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                              mu.gamma.vect=mu.gamma.vect.trans, sigma.gamma.vect=sigma.gamma.vect.trans,
@@ -893,7 +900,8 @@ ds.gamlss <- function(formula = NULL, sigma.formula = '~1', nu.formula = '~1', t
           } else {
             # only save parameter estimates (for 1st inner iteration or if deviance did not increase)
             cally6 <- call('gamlssDS6', parameter=parameter, formula=formula.trans, sigma.formula=sigma.formula.trans, 
-                           nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data, 
+                           nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data,
+                           mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                            mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                            nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                            mu.gamma.vect=mu.gamma.vect.trans, sigma.gamma.vect=sigma.gamma.vect.trans,
