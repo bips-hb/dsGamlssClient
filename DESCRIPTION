@@ -1,0 +1,10 @@
+Package: dsGamlssClient
+Maintainer: Annika swenne <swenne@leibniz-bips>
+Author: Annika Swenne <swenne@leibniz-bips>
+Version: 1.0.0
+License: GPL-3
+Title: DataSHIELD client side functions for GAMLSS
+Description: DataSHIELD client side functions to fit Generalized Additive Models for Location, Scale and Shape.
+Depends:
+RoxygenNote: 7.2.3
+Encoding: UTF-8
