@@ -522,9 +522,10 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
       xl <- smoother.xl[which(smoother.names==name)]
       xr <- smoother.xr[which(smoother.names==name)]
       dx <- (xr-xl)/mu.pb.control[[i]]$inter # increment to ensure the desired number of intervals ndx 
-      mod.gamlss.ds$mu.coefSmo[[i]]$knots <- seq(xl-mu.pb.control[[i]]$degree*dx, 
-                                                 xr+mu.pb.control[[i]]$degree*dx, 
-                                                 by=dx)
+      deg <- mu.pb.control[[i]]$degree
+      knots <- seq(xl-deg*dx, xr+deg*dx, by=dx)
+      n <- length(knots)
+      mod.gamlss.ds$mu.coefSmo[[i]]$knots <- knots[-c(1:(deg-1), (n-(deg-2)):n)]
     }
   }
   if (length(mod.gamlss.ds$sigma.coefSmo)>0){
@@ -534,9 +535,10 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
       xl <- smoother.xl[which(smoother.names==name)]
       xr <- smoother.xr[which(smoother.names==name)]
       dx <- (xr-xl)/sigma.pb.control[[i]]$inter # increment to ensure the desired number of intervals ndx 
-      mod.gamlss.ds$sigma.coefSmo[[i]]$knots <- seq(xl-sigma.pb.control[[i]]$degree*dx, 
-                                                    xr+sigma.pb.control[[i]]$degree*dx, 
-                                                    by=dx)
+      deg <- sigma.pb.control[[i]]$degree
+      knots <- seq(xl-deg*dx, xr+deg*dx, by=dx)
+      n <- length(knots)
+      mod.gamlss.ds$sigma.coefSmo[[i]]$knots <- knots[-c(1:(deg-1), (n-(deg-2)):n)]
     }
   }
   if (length(mod.gamlss.ds$nu.coefSmo)>0){
@@ -546,9 +548,10 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
       xl <- smoother.xl[which(smoother.names==name)]
       xr <- smoother.xr[which(smoother.names==name)]
       dx <- (xr-xl)/nu.pb.control[[i]]$inter # increment to ensure the desired number of intervals ndx 
-      mod.gamlss.ds$nu.coefSmo[[i]]$knots <- seq(xl-nu.pb.control[[i]]$degree*dx, 
-                                                 xr+nu.pb.control[[i]]$degree*dx, 
-                                                 by=dx)
+      deg <- nu.pb.control[[i]]$degree
+      knots <- seq(xl-deg*dx, xr+deg*dx, by=dx)
+      n <- length(knots)
+      mod.gamlss.ds$nu.coefSmo[[i]]$knots <- knots[-c(1:(deg-1), (n-(deg-2)):n)]
     }
   }
   if (length(mod.gamlss.ds$tau.coefSmo)>0){
@@ -558,9 +561,10 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
       xl <- smoother.xl[which(smoother.names==name)]
       xr <- smoother.xr[which(smoother.names==name)]
       dx <- (xr-xl)/tau.pb.control[[i]]$inter # increment to ensure the desired number of intervals ndx 
-      mod.gamlss.ds$tau.coefSmo[[i]]$knots <- seq(xl-tau.pb.control[[i]]$degree*dx, 
-                                                  xr+tau.pb.control[[i]]$degree*dx, 
-                                                  by=dx)
+      deg <- tau.pb.control[[i]]$degree
+      knots <- seq(xl-deg*dx, xr+deg*dx, by=dx)
+      n <- length(knots)
+      mod.gamlss.ds$tau.coefSmo[[i]]$knots <- knots[-c(1:(deg-1), (n-(deg-2)):n)]
     }
   }
   
