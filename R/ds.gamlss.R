@@ -195,6 +195,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   family.trans <- gsub("=", "equal_symbol", family.trans, fixed = TRUE)
   family.trans <- gsub(",", "comma_symbol", family.trans, fixed = TRUE)
   family.trans <- gsub(" ", "", family.trans, fixed = TRUE)
+  family <- gamlss.dist::as.family(eval(parse(text=family), env=environment()))
   
   # transform the control parameters into characters
   control.trans <- paste0(as.character(control), collapse=",")
@@ -298,6 +299,10 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   weights <- NULL
   N <- NULL
   noObs <- NULL
+  mu.offset <- NULL
+  sigma.offset <- NULL
+  nu.offset <- NULL
+  tau.offset <- NULL
   
   for(ss in 1:numstudies){
     # overall minimum and maximum (anonymized) for the smoother variables
@@ -316,7 +321,10 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     noObs <- sum(noObs, study.summary.0[[ss]]$mod.gamlss.ds$noObs)
     
     # offset
-    offset <- c(offset, study.summary.0[[ss]]$mod.gamlss.ds$offset)
+    mu.offset <- c(mu.offset, study.summary.0[[ss]]$mod.gamlss.ds$mu.offset)
+    sigma.offset <- c(sigma.offset, study.summary.0[[ss]]$mod.gamlss.ds$sigma.offset)
+    nu.offset <- c(nu.offset, study.summary.0[[ss]]$mod.gamlss.ds$nu.offset)
+    tau.offset <- c(tau.offset, study.summary.0[[ss]]$mod.gamlss.ds$tau.offset)
     
     # disclosure risk
     y.invalid <- c(y.invalid, study.summary.0[[ss]]$y.invalid)
@@ -330,22 +338,21 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   
   # assign to gamlss model
   mod.gamlss.ds$weights <- weights
-  mod.gamlss.ds$offset <- offset
   if("mu" %in% names(family$parameters)){
     mod.gamlss.ds$mu.formula <- formula
-    mod.gamlss.ds$mu.terms <- terms(formula)
+    mod.gamlss.ds$mu.offset <- mu.offset
   }
   if("sigma" %in% names(family$parameters)){
     mod.gamlss.ds$sigma.formula <- sigma.formula
-    mod.gamlss.ds$sigma.terms <- terms(sigma.formula)
+    mod.gamlss.ds$sigma.offset <- sigma.offset
   }
   if("nu" %in% names(family$parameters)){
     mod.gamlss.ds$nu.formula <- nu.formula
-    mod.gamlss.ds$nu.terms <- terms(nu.formula)
+    mod.gamlss.ds$nu.offset <- nu.offset
   }
   if("tau" %in% names(family$parameters)){
     mod.gamlss.ds$tau.formula <- tau.formula
-    mod.gamlss.ds$tau.terms <- terms(tau.formula)
+    mod.gamlss.ds$tau.offset <- tau.offset
   }
   # the dataname is added for later prediction
   mod.gamlss.ds$dataname <- data
