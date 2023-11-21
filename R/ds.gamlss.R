@@ -295,6 +295,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   tau.par.invalid <- NULL
   gamlss.saturation.invalid <- NULL
   errorMessage <- NULL
+  weights <- NULL
   N <- NULL
   noObs <- NULL
   
@@ -304,12 +305,18 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     smoother.xmin <- pmin(smoother.xmin, study.summary.0[[ss]]$smoother.xmin)  # pairwise minimum (for each variable)
     smoother.xmax <- pmin(smoother.xmax, study.summary.0[[ss]]$smoother.xmax)  # pairwise minimum (for each variable)
     
+    # weights
+    weights <- c(weights, study.summary.0[[ss]]$mod.gamlss.ds$weights)
+    
     # deviance
     G.dev <- c(G.dev, study.summary.0[[ss]]$G.dev)
     
-    # Sample size
+    # sample size
     N <- sum(N, study.summary.0[[ss]]$mod.gamlss.ds$N)
     noObs <- sum(noObs, study.summary.0[[ss]]$mod.gamlss.ds$noObs)
+    
+    # offset
+    offset <- c(offset, study.summary.0[[ss]]$mod.gamlss.ds$offset)
     
     # disclosure risk
     y.invalid <- c(y.invalid, study.summary.0[[ss]]$y.invalid)
@@ -320,6 +327,28 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     gamlss.saturation.invalid <- c(gamlss.saturation.invalid, study.summary.0[[ss]]$gamlss.saturation.invalid)
     errorMessage <- c(errorMessage, study.summary.0[[ss]]$errorMessage)
   }
+  
+  # assign to gamlss model
+  mod.gamlss.ds$weights <- weights
+  mod.gamlss.ds$offset <- offset
+  if("mu" %in% names(family$parameters)){
+    mod.gamlss.ds$mu.formula <- formula
+    mod.gamlss.ds$mu.terms <- terms(formula)
+  }
+  if("sigma" %in% names(family$parameters)){
+    mod.gamlss.ds$sigma.formula <- sigma.formula
+    mod.gamlss.ds$sigma.terms <- terms(sigma.formula)
+  }
+  if("nu" %in% names(family$parameters)){
+    mod.gamlss.ds$nu.formula <- nu.formula
+    mod.gamlss.ds$nu.terms <- terms(nu.formula)
+  }
+  if("tau" %in% names(family$parameters)){
+    mod.gamlss.ds$tau.formula <- tau.formula
+    mod.gamlss.ds$tau.terms <- terms(tau.formula)
+  }
+  # the dataname is added for later prediction
+  mod.gamlss.ds$dataname <- data
   
   y.invalid <- as.matrix(y.invalid)
   sum.y.invalid <- sum(y.invalid)
