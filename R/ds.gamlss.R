@@ -308,7 +308,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     # overall minimum and maximum (anonymized) for the smoother variables
     # Note that the minimum and maximum are needed to use the same knots on all servers
     smoother.xmin <- pmin(smoother.xmin, study.summary.0[[ss]]$smoother.xmin)  # pairwise minimum (for each variable)
-    smoother.xmax <- pmin(smoother.xmax, study.summary.0[[ss]]$smoother.xmax)  # pairwise minimum (for each variable)
+    smoother.xmax <- pmax(smoother.xmax, study.summary.0[[ss]]$smoother.xmax)  # pairwise minimum (for each variable)
     
     # weights
     weights <- c(weights, study.summary.0[[ss]]$mod.gamlss.ds$weights)
