@@ -195,6 +195,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   family.trans <- gsub("=", "equal_symbol", family.trans, fixed = TRUE)
   family.trans <- gsub(",", "comma_symbol", family.trans, fixed = TRUE)
   family.trans <- gsub(" ", "", family.trans, fixed = TRUE)
+  familytext <- family
   family <- gamlss.dist::as.family(eval(parse(text=family), env=environment()))
   
   # transform the control parameters into characters
@@ -218,7 +219,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   outcome <- strsplit(formulatext, "~", fixed=TRUE)[[1]][1]
   # global mean (required by most distributions)
   global.mean <- dsBaseClient:::getPooledMean(datasources, outcome)
-  if (family=="NO()"){
+  if (familytext=="NO()"){
     # global sd
     # attention: leads slightly different results than sd() on pooled data
     global.sd <- sqrt(dsBaseClient:::getPooledVar(datasources, outcome))
