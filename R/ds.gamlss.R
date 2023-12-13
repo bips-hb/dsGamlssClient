@@ -217,11 +217,11 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   # for certain families)
   outcome <- strsplit(formulatext, "~", fixed=TRUE)[[1]][1]
   # global mean (required by most distributions)
-  global.mean <- getPooledMean(datasources, outcome)
+  global.mean <- dsBaseClient:::getPooledMean(datasources, outcome)
   if (family=="NO()"){
     # global sd
     # attention: leads slightly different results than sd() on pooled data
-    global.sd <- sqrt(getPooledVar(datasources, outcome))
+    global.sd <- sqrt(dsBaseClient:::getPooledVar(datasources, outcome))
   } else {
     global.sd <- NULL
   }
