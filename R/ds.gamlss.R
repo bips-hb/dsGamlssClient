@@ -212,11 +212,26 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   nu.beta.vect.trans <- paste0(as.character(nu.beta.vect), collapse=",")
   tau.beta.vect.trans <- paste0(as.character(tau.beta.vect), collapse=",")
   
+  ## Get global mean & sd for outcome
+  # (necessary for initialization of distribution parameters on the server side
+  # for certain families)
+  outcome <- strsplit(formulatext, "~", fixed=TRUE)[[1]][1]
+  # global mean (required by most distributions)
+  global.mean <- getPooledMean(datasources, outcome)
+  if (family=="NO()"){
+    # global sd
+    # attention: leads slightly different results than sd() on pooled data
+    global.sd <- sqrt(getPooledVar(datasources, outcome))
+  } else {
+    global.sd <- NULL
+  }
+  
   ## Identify the correct dimension for start betas via calling first component of gamlssDS
+  ## Initialize the distribution parameter estimates on the server side
   cally1 <- call('gamlssDS1', formula=formula.trans, sigma.formula=sigma.formula.trans, 
                  nu.formula=nu.formula.trans, tau.formula=tau.formula.trans,
                  family=family.trans, data=data, mu.fix=mu.fix, sigma.fix=sigma.fix, 
-                 nu.fix=nu.fix, tau.fix=tau.fix,
+                 nu.fix=nu.fix, tau.fix=tau.fix, global.mean=global.mean, global.sd=global.sd,
                  control=control.trans, i.control=i.control.trans)
   
   study.summary.0 <- DSI::datashield.aggregate(datasources, cally1)
