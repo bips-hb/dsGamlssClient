@@ -110,7 +110,7 @@ ds.predict.gamlss <- function(object, newdata, what="mu",
   ## Predict the parameter
   if (type=="response") {
     # get the link function
-    family <- gamlss.dist::as.family(eval(parse(text=paste(mod.gamlss.ds$family[1], "()", sep="")), env=environment()))
+    family <- gamlss.dist::as.family(eval(parse(text=paste(object$family[1], "()", sep="")), env=environment()))
     par <- eval(parse(text=paste("family$", what, ".linkinv(eta)", sep="")), env=environment())
     return(par)
   } else {
