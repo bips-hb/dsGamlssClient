@@ -35,6 +35,15 @@
 #' i.e. 'BI'. Family functions can take arguments, as in 'BI(mu.link=probit)'.
 #' @param data a data frame containing the variables occurring in the formula. 
 #' If this is missing, the variables should be on the parent environment.
+#' @param min.values numeric vector. Allows to specify minimum values for the covariates
+#' which are used to determine the knots for pb(). If NULL an anonymized (noisy)
+#' minimum is used instead. Default NULL.
+#' @param max.values numeric vector. Allows to specify maximum values for the covariates
+#' which are used to determine the knots for pb(). If NULL an anonymized (noisy)
+#' maximum is used instead. Default NULL.
+#' @param min.max.names a character vector giving the names for the minimum and
+#' maximum values. Only required if \code{min.values} or \code{max.values} are given. 
+#' Default NULL.
 #' @param checks logical. If TRUE \code{ds.gamlss} checks the structural integrity 
 #' of the model. Default FALSE.
 #' @param method a character indicating the algorithm for GAMLSS. Currently only the
@@ -75,9 +84,12 @@
 #' @export
 
 ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.formula = ~1,
-                      family = 'NO()', data = NULL, checks = FALSE, method = 'RS', mu.fix = FALSE, sigma.fix = FALSE,
-                      nu.fix = FALSE, tau.fix = FALSE, control = c(0.001, 20, 1, 1, 1, 1, Inf),
-                      i.control = c(0.001, 50, 30, 0.001), autostep = TRUE, datasource = NULL){
+                      family = 'NO()', data = NULL, min.values = NULL, max.values = NULL, 
+                      min.max.names = NULL, checks = FALSE, method = 'RS', 
+                      mu.fix = FALSE, sigma.fix = FALSE, nu.fix = FALSE, tau.fix = FALSE, 
+                      control = c(0.001, 20, 1, 1, 1, 1, Inf),
+                      i.control = c(0.001, 50, 30, 0.001), 
+                      autostep = TRUE, datasource = NULL){
   
   #**************************************************************************
   # I) Preparation ----
@@ -514,6 +526,18 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   tau.gamma.vect.trans <- paste0(as.character(tau.gamma.vect), collapse=",")
   
   # Left & right boundary for the knots for the pb.smoother variables
+  if (!is.null(min.max.names)){
+    if (length(grep("$", min.max.names, fixed=TRUE))==0){
+      min.max.names <- paste(data, min.max.names, sep="$")
+    }
+    position <- match(smoother.names, min.max.names)
+  }
+  if (!is.null(min)){
+    smoother.xmin[position] <- min.values
+  }
+  if (!is.null(max)){
+    smoother.xmax[position] <- max.values
+  }
   smoother.xl <- smoother.xmin - 0.01 * (smoother.xmax - smoother.xmin)
   smoother.xr <- smoother.xmax + 0.01 * (smoother.xmax - smoother.xmin)
   
