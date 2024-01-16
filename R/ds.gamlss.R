@@ -532,10 +532,10 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     }
     position <- match(smoother.names, min.max.names)
   }
-  if (!is.null(min)){
+  if (!is.null(min.values)){
     smoother.xmin[position] <- min.values
   }
-  if (!is.null(max)){
+  if (!is.null(max.values)){
     smoother.xmax[position] <- max.values
   }
   smoother.xl <- smoother.xmin - 0.01 * (smoother.xmax - smoother.xmin)
