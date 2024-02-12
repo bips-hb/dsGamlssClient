@@ -15,7 +15,8 @@
 #'                          \code{gamlssDS3},
 #'                          \code{gamlssDS4},
 #'                          \code{gamlssDS5},
-#'                          \code{gamlssDS6}
+#'                          \code{gamlssDS6},
+#'                          \code{gamlssDS7}
 #' 
 #' @param formula a formula object, with the response on the left of an ~ operator, 
 #' and the terms, separated by + operators, on the right. Nonparametric smoothing
@@ -1105,6 +1106,20 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   mod.gamlss.ds$P.deviance <- G.dev + mod.gamlss.ds$pen
   mod.gamlss.ds$aic <- G.dev + 2*mod.gamlss.ds$df.fit
   mod.gamlss.ds$sbc <- G.dev + log(noObs)*mod.gamlss.ds$df.fit
+  
+  # Residuals
+  cally7 <- call('gamlssDS7', formula=formula.trans, sigma.formula=sigma.formula.trans, 
+                 nu.formula=nu.formula.trans, tau.formula=tau.formula.trans,
+                 family=family.trans, data=data, mu.fix=mu.fix, sigma.fix=sigma.fix, 
+                 nu.fix=nu.fix, tau.fix=tau.fix,
+                 control=control.trans, i.control=i.control.trans)
+  study.summary.0 <- DSI::datashield.aggregate(datasources, cally7)
+  residuals <- NULL
+  
+  for(s in 1:numstudies){
+    residuals <- c(residuals, study.summary.0[[s]])
+  }
+  mod.gamlss.ds$residuals <- residuals
   
   return(mod.gamlss.ds)
   
