@@ -74,6 +74,8 @@
 #' c(0.001, 50, 30, 0.001).
 #' @param autostep logical, indicating whether the steps should be halved automatically 
 #' if the new global deviance is greater than the old one. The default is TRUE.
+#' @param k  the number of the nearest neighbours for which the mean is calculated
+#' to obtain the anonymized quantile residuals. The default is 3.
 #' @param datasources  a list of \code{\link{DSConnection-class}} 
 #' objects obtained after login. If the \code{datasources} argument is not specified
 #' the default set of connections will be used: see \code{\link{datashield.connections_default}}.
@@ -90,7 +92,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
                       mu.fix = FALSE, sigma.fix = FALSE, nu.fix = FALSE, tau.fix = FALSE, 
                       control = c(0.001, 20, 1, 1, 1, 1, Inf),
                       i.control = c(0.001, 50, 30, 0.001), 
-                      autostep = TRUE, datasource = NULL){
+                      autostep = TRUE, k = 3, datasource = NULL){
   
   #**************************************************************************
   # I) Preparation ----
@@ -1112,7 +1114,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
                  nu.formula=nu.formula.trans, tau.formula=tau.formula.trans,
                  family=family.trans, data=data, mu.fix=mu.fix, sigma.fix=sigma.fix, 
                  nu.fix=nu.fix, tau.fix=tau.fix,
-                 control=control.trans, i.control=i.control.trans)
+                 control=control.trans, i.control=i.control.trans, k=k)
   study.summary.0 <- DSI::datashield.aggregate(datasources, cally7)
   residuals <- NULL
   
