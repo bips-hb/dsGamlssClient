@@ -5,6 +5,8 @@ Version: 1.0.0
 License: GPL-3
 Title: DataSHIELD client side functions for GAMLSS
 Description: DataSHIELD client side functions to fit Generalized Additive Models for Location, Scale and Shape.
-Depends:
 RoxygenNote: 7.2.3
 Encoding: UTF-8
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
