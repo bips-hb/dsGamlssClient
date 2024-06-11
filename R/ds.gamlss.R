@@ -76,9 +76,9 @@
 #' if the new global deviance is greater than the old one. The default is TRUE.
 #' @param k  the number of the nearest neighbours for which the mean is calculated
 #' to obtain the anonymized quantile residuals. The default is 3.
-#' @param datasources  a list of \code{\link{DSConnection-class}} 
+#' @param datasources  a list of \code{\link[DSI]{DSConnection-class}} 
 #' objects obtained after login. If the \code{datasources} argument is not specified
-#' the default set of connections will be used: see \code{\link{datashield.connections_default}}.
+#' the default set of connections will be used: see \code{\link[DSI]{datashield.connections_default}}.
 #' @return a gamlss object with all components as in the native R gamlss function. 
 #' Individual-level information like the components y (the response response) and 
 #' residuals (the normalised quantile residuals of the model) are not disclosed to 
@@ -92,7 +92,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
                       mu.fix = FALSE, sigma.fix = FALSE, nu.fix = FALSE, tau.fix = FALSE, 
                       control = c(0.001, 20, 1, 1, 1, 1, Inf),
                       i.control = c(0.001, 50, 30, 0.001), 
-                      autostep = TRUE, k = 3, datasource = NULL){
+                      autostep = TRUE, k = 3, datasources = NULL){
   
   #**************************************************************************
   # I) Preparation ----
@@ -119,7 +119,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   
   # look for DS connections
   if(is.null(datasources)){
-    datasources <- datashield.connections_find()
+    datasources <- DSI::datashield.connections_find()
   }
   
   # ensure datasources is a list of DSConnection-class
@@ -211,7 +211,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   family.trans <- gsub(",", "comma_symbol", family.trans, fixed = TRUE)
   family.trans <- gsub(" ", "", family.trans, fixed = TRUE)
   familytext <- family
-  family <- gamlss.dist::as.family(eval(parse(text=family), env=environment()))
+  family <- gamlss.dist::as.family(eval(parse(text=family), envir=environment()))
   
   # transform the control parameters into characters
   control.trans <- paste0(as.character(control), collapse=",")
@@ -233,11 +233,11 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   # for certain families)
   outcome <- strsplit(formulatext, "~", fixed=TRUE)[[1]][1]
   # global mean (required by most distributions)
-  global.mean <- dsBaseClient:::getPooledMean(datasources, outcome)
+  global.mean <- getPooledMean(datasources, outcome)
   if (familytext=="NO()"){
     # global sd
     # attention: leads slightly different results than sd() on pooled data
-    global.sd <- sqrt(dsBaseClient:::getPooledVar(datasources, outcome))
+    global.sd <- sqrt(getPooledVar(datasources, outcome))
   } else {
     global.sd <- NULL
   }
@@ -658,10 +658,10 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     
     for (p in 1:length(parameters)){
       parameter <- parameters[p]
-      fixed.lambda <- eval(parse(text=paste(parameter, ".fixed.lambda", sep="")), env=environment())
-      pb.control <- eval(parse(text=paste(parameter, ".pb.control", sep="")), env=environment())
-      num.par.gamma <- eval(parse(text=paste(parameter, ".num.par.gamma", sep="")), env=environment())
-      gamma.vect <- eval(parse(text=paste(parameter, ".gamma.vect", sep="")), env=environment())
+      fixed.lambda <- eval(parse(text=paste(parameter, ".fixed.lambda", sep="")), envir=environment())
+      pb.control <- eval(parse(text=paste(parameter, ".pb.control", sep="")), envir=environment())
+      num.par.gamma <- eval(parse(text=paste(parameter, ".num.par.gamma", sep="")), envir=environment())
+      gamma.vect <- eval(parse(text=paste(parameter, ".gamma.vect", sep="")), envir=environment())
       
       #*A.1) Inner iteration ----
       inner.converge.state <- FALSE
@@ -756,8 +756,8 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
           # convert it to legal transmission format
           beta.vect.trans <- paste0(as.character(beta.vect.next), collapse=",")
           # assign the new beta vectors to the current parameter
-          eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefficients <- beta.vect.next", sep="")), env=environment())
-          base::assign(paste(parameter, ".beta.vect.trans", sep=""), beta.vect.trans, env=environment())
+          eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefficients <- beta.vect.next", sep="")), envir=environment())
+          base::assign(paste(parameter, ".beta.vect.trans", sep=""), beta.vect.trans, envir=environment())
           
           ## Reset ratio 
           # to ensure that inner iteration works without backfitting if no smoothers are specifed
@@ -817,7 +817,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
             # update gamma
             if (fixed.lambda[s]==TRUE){
               #*A.1.i.b.i.a) case 1: lambda is known ----
-              lambda <- eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$lambda", sep="")), env=environment())
+              lambda <- eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$lambda", sep="")), envir=environment())
               G.mat <- t(D.mat) %*% D.mat
               inverse.matrix.total <- solve(matrix.total + lambda * G.mat)
               gamma.vect.update <- as.vector(inverse.matrix.total %*% vector.total)
@@ -825,18 +825,18 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
               # convert it to legal transmission format
               gamma.vect.trans <- paste0(as.character(gamma.vect), collapse=",")
               # assign the new gamma vectors to the current parameter (use eval since assign does not work on attributes)
-              eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[",s, "]]$coef <- gamma.vect.update", sep="")), env=environment())
+              eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[",s, "]]$coef <- gamma.vect.update", sep="")), envir=environment())
               base::assign(paste(parameter, ".gamma.vect.trans", sep=""), gamma.vect.trans, env=parent.frame())
               
               # update edf
               edf <- sum(diag(inverse.matrix.total %*% matrix.total))
-              eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$edf <- edf", sep="")), env=environment())
+              eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$edf <- edf", sep="")), envir=environment())
               
             } else {
               #*A.1.i.b.i.b) case 2: lambda is estimated ----
               if (pb.control[[s]]$method=="ML"){
                 for (lambda.it in 1:50){
-                  lambda <- eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$lambda", sep="")), env=environment())
+                  lambda <- eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$lambda", sep="")), envir=environment())
                   # estimate gamma (for current lambda)
                   G.mat <- t(D.mat) %*% D.mat
                   inverse.matrix.total <- solve(matrix.total + lambda*G.mat)
@@ -845,8 +845,8 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
                   # convert it to legal transmission format
                   gamma.vect.trans <- paste0(as.character(gamma.vect), collapse=",")
                   # assign the new gamma vectors to the current parameter
-                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[",s, "]]$coef <- gamma.vect.update", sep="")), env=environment())
-                  base::assign(paste(parameter, ".gamma.vect.trans", sep=""), gamma.vect.trans, env=environment())
+                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[",s, "]]$coef <- gamma.vect.update", sep="")), envir=environment())
+                  base::assign(paste(parameter, ".gamma.vect.trans", sep=""), gamma.vect.trans, envir=environment())
                   
                   # estimate lambda
                   # call fourth component of gamlssDS to generate matrices and vectors for PWLS to estimate gamma
@@ -883,13 +883,13 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
                     lambda <- 1.0e+7
                   }
                   # assign the values to the gamlss object
-                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".lambda[", s, "] <- lambda", sep="")), env=environment())
-                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$lambda <- lambda", sep="")), env=environment())
-                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$edf <- edf", sep="")), env=environment())
-                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sigb2 <- tau2", sep="")), env=environment())
-                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sigb <- sqrt(tau2)", sep="")), env=environment())
-                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sige2 <- sig2", sep="")), env=environment())
-                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sige <- sqrt(sig2)", sep="")), env=environment())
+                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".lambda[", s, "] <- lambda", sep="")), envir=environment())
+                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$lambda <- lambda", sep="")), envir=environment())
+                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$edf <- edf", sep="")), envir=environment())
+                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sigb2 <- tau2", sep="")), envir=environment())
+                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sigb <- sqrt(tau2)", sep="")), envir=environment())
+                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sige2 <- sig2", sep="")), envir=environment())
+                  eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sige <- sqrt(sig2)", sep="")), envir=environment())
                   
                   if (abs(lambda-lambda.old) < 1.0e-7 || lambda > 1.0e10){
                     # change in lambda
@@ -898,10 +898,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
                   # update lambda
                   # pb.lambda.start[lambda.start.pos+s] <- lambda
                 } # end of for loop for ML method
-              } else if (lambda.method=="GAIC"){
-                
-                
-              }
+              } 
               
             } # End of case 2: lambda is estimated
             
@@ -1015,7 +1012,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
         errorMessage3 <- unique(errorMessage3)
         # assign the penalty to the gamlss object if the parameter includes smoothers
         if (length(smoothers)>0){
-          eval(parse(text=paste("mod.gamlss.ds$", parameter, ".pen <- pen", sep="")), env=environment())
+          eval(parse(text=paste("mod.gamlss.ds$", parameter, ".pen <- pen", sep="")), envir=environment())
         }
         
         if (!is.null(errorMessage3)){

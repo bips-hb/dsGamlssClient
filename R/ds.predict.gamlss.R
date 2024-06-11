@@ -57,18 +57,18 @@ ds.predict.gamlss <- function(object, newdata, what="mu",
   } # end create.bbase function
   
   ## Get estimated model parameters for distribution parameter what
-  par.coef <- eval(parse(text=paste("object$", what, ".coefficients", sep="")), env=environment())
+  par.coef <- eval(parse(text=paste("object$", what, ".coefficients", sep="")), envir=environment())
   par.coef.names <- names(par.coef)
-  par.coefSmo <- eval(parse(text=paste("object$", what, ".coefSmo", sep="")), env=environment())
+  par.coefSmo <- eval(parse(text=paste("object$", what, ".coefSmo", sep="")), envir=environment())
   
   ## Calculate linear predictor for parametric effects
   # Get design matrix
-  par.formula <- eval(parse(text=paste("object$", what, ".formula", sep="")), env=environment())
+  par.formula <- eval(parse(text=paste("object$", what, ".formula", sep="")), envir=environment())
   par.formula <- stats::as.formula(gsub(object$dataname, "newdata", Reduce(paste, deparse(par.formula))))
   if (length(par.formula) == 3) 
     par.formula[2] <- NULL
-  par.terms <- terms(par.formula)
-  par.x <- model.matrix(par.terms, data=newdata, contrasts=object$contrasts)
+  par.terms <- stats::terms(par.formula)
+  par.x <- stats::model.matrix(par.terms, data=newdata, contrasts=object$contrasts)
   # Calculate linear predictor
   eta <- par.x %*% par.coef
   
@@ -83,12 +83,12 @@ ds.predict.gamlss <- function(object, newdata, what="mu",
     
     for (i in 1:length(par.coefSmo)){
       ## Get the required variables
-      name <- eval(parse(text=paste("object$", what, ".coefSmo[[", i, "]]$name", sep="")), env=environment())
+      name <- eval(parse(text=paste("object$", what, ".coefSmo[[", i, "]]$name", sep="")), envir=environment())
       # remove explicit reference to old data frame if necessary
       if (grepl("$", name, fixed=TRUE)){
         name <- strsplit(name, split="$", fixed=TRUE)[[1]][2]
       }
-      knots <- eval(parse(text=paste("object$", what, ".coefSmo[[", i, "]]$knots", sep="")), env=environment())
+      knots <- eval(parse(text=paste("object$", what, ".coefSmo[[", i, "]]$knots", sep="")), envir=environment())
       if (length(grep(pattern="pb.control", x=par.pb.args[[i]], fixed=TRUE))>0) {
         # control parameters specified
         pb.control <- eval(parse(text=par.pb.args[[i]][grep(pattern="pb.control", x=par.pb.args[[i]], fixed=TRUE)]))
@@ -96,7 +96,7 @@ ds.predict.gamlss <- function(object, newdata, what="mu",
         # no control parameters specified - use default
         pb.control <- eval(parse(text="pb.control()"))
       }
-      x <- eval(parse(text=paste("newdata$", name, sep="")), env=parent.frame())
+      x <- eval(parse(text=paste("newdata$", name, sep="")), envir=parent.frame())
       
       ## Create the basis matrix
       par.B <- create.bbase(xvalues=x, knots=knots, ndx=pb.control$inter, deg=pb.control$degree)
@@ -110,8 +110,8 @@ ds.predict.gamlss <- function(object, newdata, what="mu",
   ## Predict the parameter
   if (type=="response") {
     # get the link function
-    family <- gamlss.dist::as.family(eval(parse(text=paste(object$family[1], "()", sep="")), env=environment()))
-    par <- eval(parse(text=paste("family$", what, ".linkinv(eta)", sep="")), env=environment())
+    family <- gamlss.dist::as.family(eval(parse(text=paste(object$family[1], "()", sep="")), envir=environment()))
+    par <- eval(parse(text=paste("family$", what, ".linkinv(eta)", sep="")), envir=environment())
     return(par)
   } else {
     return(eta)
