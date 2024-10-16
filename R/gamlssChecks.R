@@ -14,7 +14,7 @@
 #' the default set of connections will be used: see \link[DSI]{datashield.connections_default}.
 #' @keywords internal
 #' @return an integer 0 if check was passed and 1 if failed
-#' @author Gaye, A.
+#' @author Annika Swenne
 #'
 gamlssChecks <- function(formula, sigma.formula, nu.formula, tau.formula, data, datasources){
   
