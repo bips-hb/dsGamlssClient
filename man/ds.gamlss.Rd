@@ -16,6 +16,10 @@ ds.gamlss(
   min.max.names = NULL,
   checks = FALSE,
   method = "RS",
+  mu.coef.start = NULL,
+  sigma.coef.start = NULL,
+  nu.coef.start = NULL,
+  tau.coef.start = NULL,
   mu.fix = FALSE,
   sigma.fix = FALSE,
   nu.fix = FALSE,
@@ -69,6 +73,14 @@ of the model. Default FALSE.}
 
 \item{method}{a character indicating the algorithm for GAMLSS. Currently only the
 Rigby and Stasinopolous algorithm (\code{method='RS'}) is implemented.}
+
+\item{mu.coef.start}{vector of initial values for the regression coefficients for mu}
+
+\item{sigma.coef.start}{vector of initial values for the regression coefficients for sigma}
+
+\item{nu.coef.start}{vector of initial values for the regression coefficients for nu}
+
+\item{tau.coef.start}{vector of initial values for the regression coefficients for tau}
 
 \item{mu.fix}{logical, indicating whether the mu parameter should be kept fixed
 in the fitting processes.}

@@ -49,6 +49,10 @@
 #' of the model. Default FALSE.
 #' @param method a character indicating the algorithm for GAMLSS. Currently only the
 #' Rigby and Stasinopolous algorithm (\code{method='RS'}) is implemented. 
+#' @param mu.coef.start vector of initial values for the regression coefficients for mu
+#' @param sigma.coef.start vector of initial values for the regression coefficients for sigma
+#' @param nu.coef.start vector of initial values for the regression coefficients for nu
+#' @param tau.coef.start vector of initial values for the regression coefficients for tau
 #' @param mu.fix logical, indicating whether the mu parameter should be kept fixed
 #' in the fitting processes.
 #' @param sigma.fix logical, indicating whether the sigma parameter should be kept
@@ -89,6 +93,8 @@
 ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.formula = ~1,
                       family = 'NO()', data = NULL, min.values = NULL, max.values = NULL, 
                       min.max.names = NULL, checks = FALSE, method = 'RS', 
+                      mu.coef.start = NULL, sigma.coef.start = NULL, nu.coef.start = NULL,
+                      tau.coef.start = NULL, 
                       mu.fix = FALSE, sigma.fix = FALSE, nu.fix = FALSE, tau.fix = FALSE, 
                       control = c(0.001, 20, 1, 1, 1, 1, Inf),
                       i.control = c(0.001, 50, 30, 0.001), 
@@ -246,7 +252,9 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   ## Initialize the distribution parameter estimates on the server side
   cally1 <- call('gamlssDS1', formula=formula.trans, sigma.formula=sigma.formula.trans, 
                  nu.formula=nu.formula.trans, tau.formula=tau.formula.trans,
-                 family=family.trans, data=data, mu.fix=mu.fix, sigma.fix=sigma.fix, 
+                 family=family.trans, data=data, mu.coef.start=mu.coef.start, 
+                 sigma.coef.start=sigma.coef.start, nu.coef.start=nu.coef.start,
+                 tau.coef.start=tau.coef.start, mu.fix=mu.fix, sigma.fix=sigma.fix, 
                  nu.fix=nu.fix, tau.fix=tau.fix, global.mean=global.mean, global.sd=global.sd,
                  control=control.trans, i.control=i.control.trans)
   
