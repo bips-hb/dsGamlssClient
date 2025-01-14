@@ -323,6 +323,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     global.sd <- NULL
   }
   
+  
   ## Identify the correct dimension for start betas via calling first component of gamlssDS
   ## Initialize the distribution parameter estimates on the server side
   cally1 <- call('gamlssDS1', formula=formula.trans, sigma.formula=sigma.formula.trans, 
@@ -338,7 +339,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
                  control=control.trans, i.control=i.control.trans)
   
   study.summary.0 <- DSI::datashield.aggregate(datasources, cally1)
-  
+
   #**************************************************************************
   # II) Disclosure Risk ----
   # summarizes disclosure risk from the individual servers
@@ -553,67 +554,71 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   parameters <- mod.gamlss.ds$parameters
   smoother.names <- study.summary.0[[1]]$smoother.names
   
-  ## Vectors of beta values with correct dimensions
+  ## Vectors of beta values with correct dimensions & in legal transmission format
   if(!is.null(mu.num.par)){
     mu.beta.vect <- rep(0, mu.num.par)
+    mu.beta.vect.trans <- paste0(as.character(mu.beta.vect), collapse=",")
   }else{
     mu.beta.vect <- NULL
+    mu.beta.vect.trans <- NULL
   }
   
   if(!is.null(sigma.num.par)){
     sigma.beta.vect <- rep(0, sigma.num.par)
+    sigma.beta.vect.trans <- paste0(as.character(sigma.beta.vect), collapse=",")
   }else{
     sigma.beta.vect <- NULL
+    sigma.beta.vect.trans <- NULL
   }
   
   if(!is.null(nu.num.par)){
     nu.beta.vect <- rep(0, nu.num.par)
+    nu.beta.vect.trans <- paste0(as.character(nu.beta.vect), collapse=",")
   }else{
     nu.beta.vect <- NULL
+    nu.beta.vect.trans <- NULL
   }
   
   if(!is.null(tau.num.par)){
     tau.beta.vect <- rep(0, tau.num.par)
+    tau.beta.vect.trans <- paste0(as.character(tau.beta.vect), collapse=",")
   }else{
     tau.beta.vect <- NULL
+    tau.beta.vect.trans <- NULL
   }
   
-  # vectors in legal transmission format ("0","0",...)
-  mu.beta.vect.trans <- paste0(as.character(mu.beta.vect), collapse=",")
-  sigma.beta.vect.trans <- paste0(as.character(sigma.beta.vect), collapse=",")
-  nu.beta.vect.trans <- paste0(as.character(nu.beta.vect), collapse=",")
-  tau.beta.vect.trans <- paste0(as.character(tau.beta.vect), collapse=",")
-  
-  ## Vectors of gamma values with correct dimensions
+  ## Vectors of gamma values with correct dimensions & in legal transmission format
   if(!is.null(mu.num.par.gamma)){
     mu.gamma.vect <- rep(0, sum(mu.num.par.gamma))
+    mu.gamma.vect.trans <- paste0(as.character(mu.gamma.vect), collapse=",")
   }else{
     mu.gamma.vect <- NULL
+    mu.gamma.vect.trans <- NULL
   }
   
   if(!is.null(sigma.num.par.gamma)){
     sigma.gamma.vect <- rep(0, sum(sigma.num.par.gamma))
+    sigma.gamma.vect.trans <- paste0(as.character(sigma.gamma.vect), collapse=",")
   }else{
     sigma.gamma.vect <- NULL
+    sigma.gamma.vect.trans <- NULL
   }
   
   if(!is.null(nu.num.par.gamma)){
     nu.gamma.vect <- rep(0, sum(nu.num.par.gamma))
+    nu.gamma.vect.trans <- paste0(as.character(nu.gamma.vect), collapse=",")
   }else{
     nu.gamma.vect <- NULL
+    nu.gamma.vect.trans <- NULL
   }
   
   if(!is.null(tau.num.par.gamma)){
     tau.gamma.vect <- rep(0, sum(tau.num.par.gamma))
+    tau.gamma.vect.trans <- paste0(as.character(tau.gamma.vect), collapse=",")
   }else{
     tau.gamma.vect <- NULL
+    tau.gamma.vect.trans <- NULL
   }
-  
-  # vectors in legal transmission format ("0","0",...)
-  mu.gamma.vect.trans <- paste0(as.character(mu.gamma.vect), collapse=",")
-  sigma.gamma.vect.trans <- paste0(as.character(sigma.gamma.vect), collapse=",")
-  nu.gamma.vect.trans <- paste0(as.character(nu.gamma.vect), collapse=",")
-  tau.gamma.vect.trans <- paste0(as.character(tau.gamma.vect), collapse=",")
   
   # Left & right boundary for the knots for the pb.smoother variables
   if (!is.null(min.max.names)){
@@ -631,9 +636,20 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   smoother.xl <- smoother.xmin - 0.01 * (smoother.xmax - smoother.xmin)
   smoother.xr <- smoother.xmax + 0.01 * (smoother.xmax - smoother.xmin)
   
-  # convert them to character vector
-  smoother.xl.trans <- paste0(as.character(smoother.xl), collapse=",")
-  smoother.xr.trans <- paste0(as.character(smoother.xr), collapse=",")
+  # convert them to character vector or to NULL if empty
+  if (length(smoother.xl)==0){
+    smoother.xl <- NULL
+    smoother.xl.trans <- NULL
+  } else {
+    smoother.xl.trans <- paste0(as.character(smoother.xl), collapse=",")
+  }
+  
+  if (length(smoother.xr)==0){
+    smoother.xr <- NULL
+    smoother.xr.trans <- NULL
+  } else {
+    smoother.xr.trans <- paste0(as.character(smoother.xr), collapse=",")
+  }
   
   ## Initialize deviance
   G.dev <- sum(G.dev)
@@ -776,8 +792,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
           
           #*A.1.i.a) WLS ----
           ## call second component of gamlssDS to generate matrices and vectors for WLS to estimate beta
-          cally2 <- call('gamlssDS2', parameter=parameter, formula=formula.trans, sigma.formula=sigma.formula.trans, 
-                         nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data, 
+          cally2 <- call('gamlssDS2', parameter=parameter, family=family.trans, data=data, 
                          mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                          mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                          nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
@@ -872,8 +887,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
             }
             
             ## call third component of gamlssDS to generate matrices and vectors for PWLS to estimate gamma
-            cally3 <- call('gamlssDS3', parameter=parameter, smoother=s, formula=formula.trans, sigma.formula=sigma.formula.trans, 
-                           nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data, 
+            cally3 <- call('gamlssDS3', parameter=parameter, smoother=s, family=family.trans, data=data, 
                            mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                            mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                            nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
@@ -901,10 +915,28 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
             }
             gamma.end <- gamma.start+num.par.gamma[s]-1
             
+            lambda <- eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$lambda", sep="")), envir=environment())
+            lambda.restricted <- FALSE
+            if (lambda>=1e+07){
+              lambda <- 1e+07
+              lambda.restricted <- TRUE
+            } # MS 19-4-12
+            if (lambda<=1e-07){
+              lambda <- 1e-07 
+              lambda.restricted <- TRUE
+            } # MS 19-4-12
+            
+            if (lambda.restricted==TRUE){
+              # to be consistent with the original gamlss function we set the values for sig to NULL and NA
+              eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sigb2 <- NULL", sep="")), envir=environment())
+              eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sigb <- NA", sep="")), envir=environment())
+              eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sige2 <- NULL", sep="")), envir=environment())
+              eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sige <- NA", sep="")), envir=environment())
+            }
+            
             # update gamma
-            if (fixed.lambda[s]==TRUE){
-              #*A.1.i.b.i.a) case 1: lambda is known ----
-              lambda <- eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$lambda", sep="")), envir=environment())
+            if (fixed.lambda[s]==TRUE | lambda.restricted==TRUE){
+              #*A.1.i.b.i.a) case 1: lambda is known or restricted ----
               G.mat <- t(D.mat) %*% D.mat
               inverse.matrix.total <- solve(matrix.total + lambda * G.mat)
               gamma.vect.update <- as.vector(inverse.matrix.total %*% vector.total)
@@ -937,8 +969,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
                   
                   # estimate lambda
                   # call fourth component of gamlssDS to generate matrices and vectors for PWLS to estimate gamma
-                  cally4 <- call('gamlssDS4', parameter=parameter, smoother=s, formula=formula.trans, sigma.formula=sigma.formula.trans, 
-                                 nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data, 
+                  cally4 <- call('gamlssDS4', parameter=parameter, smoother=s, family=family.trans, data=data, 
                                  mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                                  mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                                  nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
@@ -999,8 +1030,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
           } else{
             
             ## call fifth component of gamlssDS to check convergence of backfitting
-            cally5 <- call('gamlssDS5', parameter=parameter, formula=formula.trans, sigma.formula=sigma.formula.trans, 
-                           nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data,
+            cally5 <- call('gamlssDS5', parameter=parameter, family=family.trans, data=data,
                            mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                            mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                            nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
@@ -1024,8 +1054,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
         } # End of backfitting
         
         #*A.1.ii) Stopping criterion inner iteration ----
-        cally6 <- call('gamlssDS6', parameter=parameter, formula=formula.trans, sigma.formula=sigma.formula.trans, 
-                       nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data, 
+        cally6 <- call('gamlssDS6', parameter=parameter, family=family.trans, data=data, 
                        mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                        mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                        nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
@@ -1047,8 +1076,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
           if (dv.total > olddv.total && inner.iteration.count >= 2){
             # autostep iteration (if deviance increased)
             for(autostep.count in 1:5){
-              cally6 <- call('gamlssDS6', parameter=parameter, formula=formula.trans, sigma.formula=sigma.formula.trans, 
-                             nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data, 
+              cally6 <- call('gamlssDS6', parameter=parameter, family=family.trans, data=data, 
                              mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                              mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                              nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
@@ -1066,8 +1094,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
             }
           } else {
             # only save parameter estimates (for 1st inner iteration or if deviance did not increase)
-            cally6 <- call('gamlssDS6', parameter=parameter, formula=formula.trans, sigma.formula=sigma.formula.trans, 
-                           nu.formula=nu.formula.trans, tau.formula=tau.formula.trans, family=family.trans, data=data,
+            cally6 <- call('gamlssDS6', parameter=parameter, family=family.trans, data=data,
                            mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                            mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                            nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
@@ -1194,9 +1221,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   mod.gamlss.ds$sbc <- G.dev + log(noObs)*mod.gamlss.ds$df.fit
   
   # Residuals
-  cally7 <- call('gamlssDS7', formula=formula.trans, sigma.formula=sigma.formula.trans, 
-                 nu.formula=nu.formula.trans, tau.formula=tau.formula.trans,
-                 family=family.trans, data=data, mu.fix=mu.fix, sigma.fix=sigma.fix, 
+  cally7 <- call('gamlssDS7', family=family.trans, data=data, mu.fix=mu.fix, sigma.fix=sigma.fix, 
                  nu.fix=nu.fix, tau.fix=tau.fix,
                  control=control.trans, i.control=i.control.trans, k=k)
   study.summary.0 <- DSI::datashield.aggregate(datasources, cally7)
