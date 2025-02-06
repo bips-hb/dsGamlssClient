@@ -52,9 +52,9 @@ init.studies.dataset.gamlss <- function(variables)
     if (ds.test_env$driver == "OpalDriver")
     {
       builder <- DSI::newDSLoginBuilder(.silent = TRUE)
-      builder$append(server = "study1", url = ds.test_env$ip_address_1, user = ds.test_env$user_1, password = ds.test_env$password_1, table = "test_gamlss_project.gamlss1", options=ds.test_env$options_1)
-      builder$append(server = "study2", url = ds.test_env$ip_address_2, user = ds.test_env$user_2, password = ds.test_env$password_2, table = "test_gamlss_project.gamlss2", options=ds.test_env$options_2)
-      builder$append(server = "study3", url = ds.test_env$ip_address_3, user = ds.test_env$user_3, password = ds.test_env$password_3, table = "test_gamlss_project.gamlss3", options=ds.test_env$options_3)
+      builder$append(server = "server1", url = ds.test_env$ip_address_1, user = ds.test_env$user_1, password = ds.test_env$password_1, profile = ds.test_env$profile_1, table = "test_gamlss_project.gamlss1", options=ds.test_env$options_1)
+      builder$append(server = "server2", url = ds.test_env$ip_address_2, user = ds.test_env$user_2, password = ds.test_env$password_2, profile = ds.test_env$profile_2, table = "test_gamlss_project.gamlss2", options=ds.test_env$options_2)
+      builder$append(server = "server3", url = ds.test_env$ip_address_3, user = ds.test_env$user_3, password = ds.test_env$password_3, profile = ds.test_env$profile_3, table = "test_gamlss_project.gamlss3", options=ds.test_env$options_3)
       ds.test_env$login.data <- builder$build()
     }
     else 
