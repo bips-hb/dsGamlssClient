@@ -40,6 +40,6 @@ the variables are checked to ensure they are defined, not empty (i.e. are not mi
 at complete).
 }
 \author{
-Gaye, A.
+Annika Swenne
 }
 \keyword{internal}
