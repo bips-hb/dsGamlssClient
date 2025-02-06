@@ -8,7 +8,7 @@
 #' that is mathematically equivalent to placing all individual-level data from all sources
 #' in one central warehouse and analysing those data using the conventional 
 #' \code{gamlss()} function in R. For additional details see the help header of gamlss
-#' functions in native R gamlss package.
+#' functions in native R \code{\link[gamlss]} package.
 #' 
 #' Server functions called: \code{gamlssDS1}, 
 #'                          \code{gamlssDS2},
@@ -19,34 +19,33 @@
 #'                          \code{gamlssDS7}
 #' 
 #' @param formula a formula object, with the response on the left of an ~ operator, 
-#' and the terms, separated by + operators, on the right. Nonparametric smoothing
-#' terms are indicated by pb() for penalised beta splines, cs for smoothing splines, 
-#' lo for loess smooth terms and random or ra for random terms, 
-#' e.g. 'y~cs(x,df=5)+x1+x2*x3'. 
+#' and the terms, separated by + operators, on the right. Currently, only penalised 
+#' beta splines, indicated by \code{pb()}, are supported for nonparametric smoothing, 
+#' e.g. \code{'y~pb(x,df=5)+x1+x2*x3'}. 
 #' @param sigma.formula a formula object for fitting a model to the sigma parameter,
-#' as in the formula above, e.g. sigma.formula='~cs(x,df=5)'.
+#' as in the formula above, e.g. \code{sigma.formula='~pb(x,df=5)'}.
 #' @param nu.formula a formula object for fitting a model to the nu parameter, 
-#' e.g. nu.formula='~x'.
+#' e.g. \code{nu.formula='~x'}.
 #' @param tau.formula a formula object for fitting a model to the tau parameter, 
-#' e.g. tau.formula='~cs(x,df=2)'.
-#' @param family a gamlss.family object, which is used to define the distribution 
-#' and the link functions of the various parameters. The distribution families 
-#' supported by gamlss() can be found in gamlss.family. Functions such as 'BI()' 
-#' (binomial) produce a family object. Also can be given without the parentheses
-#' i.e. 'BI'. Family functions can take arguments, as in 'BI(mu.link=probit)'.
+#' e.g. \code{tau.formula='~pb(x,df=2)'}.
+#' @param family a string, specifying the gamlss.family for model fitting, 
+#' which is used to define the distribution and the link functions of the various parameters. 
+#' Currently, the following families are supported: \code{family=c('NO()', 'NO2()', 'BCCG()', 'BCPE()')}. 
+#' Details on the distributions can be found in \code{\link[gamlss.dist]{gamlss.family}}. 
+#' Default \code{family='NO()'}.
 #' @param data a data frame containing the variables occurring in the formula. 
 #' If this is missing, the variables should be on the parent environment.
 #' @param min.values numeric vector. Allows to specify minimum values for the covariates
-#' which are used to determine the knots for pb(). If NULL an anonymized (noisy)
-#' minimum is used instead. Default NULL.
+#' which are used to determine the knots for \code{pb()}. If \code{NULL} an anonymized (noisy)
+#' minimum is used instead. Default \code{min.values=NULL}.
 #' @param max.values numeric vector. Allows to specify maximum values for the covariates
-#' which are used to determine the knots for pb(). If NULL an anonymized (noisy)
-#' maximum is used instead. Default NULL.
+#' which are used to determine the knots for \code{pb()}. If NULL an anonymized (noisy)
+#' maximum is used instead. Default \code{max.values=NULL}.
 #' @param min.max.names a character vector giving the names for the minimum and
 #' maximum values. Only required if \code{min.values} or \code{max.values} are given. 
-#' Default NULL.
-#' @param checks logical. If TRUE \code{ds.gamlss} checks the structural integrity 
-#' of the model. Default FALSE.
+#' Default \code{min.max.names=NULL}.
+#' @param checks logical. If \code{checks=TRUE} \code{ds.gamlss} checks the structural integrity 
+#' of the model. Default \code{checks=FALSE}.
 #' @param method a character indicating the algorithm for GAMLSS. Currently only the
 #' Rigby and Stasinopolous algorithm (\code{method='RS'}) is implemented. 
 #' @param mu.coef.start optional vector of regression coefficients to compute improved 
@@ -78,13 +77,13 @@
 #' \code{tau.coef.start.names} is NULL then the same formula as in \code{tau.formula} 
 #' is used to obtain the design matrix. Default NULL.
 #' @param mu.fix logical, indicating whether the mu parameter should be kept fixed
-#' in the fitting processes.
+#' in the fitting processes. Default \code{mu.fix=FALSE}.
 #' @param sigma.fix logical, indicating whether the sigma parameter should be kept
-#' fixed in the fitting processes.
+#' fixed in the fitting processes. Default \code{sigma.fix=FALSE}.
 #' @param nu.fix logical, indicating whether the nu parameter should be kept fixed 
-#' in the fitting processes.
+#' in the fitting processes. Default \code{nu.fix=FALSE}.
 #' @param tau.fix logical, indicating whether the tau parameter should be kept fixed
-#' in the fitting processes.
+#' in the fitting processes. Default \code{tau.fix=FALSE}.
 #' @param control this sets the control parameters of the outer iterations algorithm 
 #' using the gamlss.control function. This is a vector of 7 numeric values: (i) c.crit 
 #' (the convergence criterion for the algorithm), (ii) n.cyc (the number of cycles of 
@@ -92,22 +91,22 @@
 #' (the step length for the parameter sigma), (v) nu.step (the step length for the
 #' parameter nu), (vi) tau.step (the step length for the parameter tau), (vii) gd.tol
 #' (global deviance tolerance level). The default values for these 7 parameters are 
-#' set to c(0.001, 20, 1, 1, 1, 1, Inf).
+#' set to \code{control=c(0.001, 20, 1, 1, 1, 1, Inf)}.
 #' @param i.control this sets the control parameters of the inner iterations of the 
 #' RS algorithm using the glim.control function. This is a vector of 4 numeric values: 
 #' (i) cc (the convergence criterion for the algorithm), (ii) cyc (the number of 
 #' cycles of the algorithm), (iii) bf.cyc (the number of cycles of the backfitting 
 #' algorithm), (iv) bf.tol (the convergence criterion (tolerance level) for the 
 #' backfitting algorithm). The default values for these 4 parameters are set to 
-#' c(0.001, 50, 30, 0.001).
+#' \code{i.control=c(0.001, 50, 30, 0.001)}.
 #' @param autostep logical, indicating whether the steps should be halved automatically 
-#' if the new global deviance is greater than the old one. The default is TRUE.
-#' @param k  the number of the nearest neighbours for which the mean is calculated
-#' to obtain the anonymized quantile residuals. The default is 3.
+#' if the new global deviance is greater than the old one. The default is \code{autostep=TRUE}.
+#' @param num.nearest.neigh the number of the nearest neighbours for which the mean is calculated
+#' to obtain the anonymized quantile residuals. The default is \code{num.nearest.neigh=3}.
 #' @param datasources  a list of \code{\link[DSI]{DSConnection-class}} 
 #' objects obtained after login. If the \code{datasources} argument is not specified
 #' the default set of connections will be used: see \code{\link[DSI]{datashield.connections_default}}.
-#' @return a gamlss object with all components as in the native R gamlss function. 
+#' @return a gamlss object with all components as in the native R \code{\link[gamlss]{gamlss}} function. 
 #' Individual-level information like the components y (the response response) and 
 #' residuals (the normalised quantile residuals of the model) are not disclosed to 
 #' the client-side.
@@ -116,7 +115,7 @@
 
 ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.formula = ~1,
                       family = 'NO()', data = NULL, min.values = NULL, max.values = NULL, 
-                      min.max.names = NULL, checks = FALSE, method = 'RS', 
+                      min.max.names = NULL, checks = FALSE,
                       mu.coef.start = NULL, sigma.coef.start = NULL, 
                       nu.coef.start = NULL, tau.coef.start = NULL, 
                       mu.coef.start.names = NULL, sigma.coef.start.names = NULL, 
@@ -142,12 +141,14 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   getpbcontrol <- function(args, pattern="pb.control"){
     if (length(grep(pattern="pb.control", args, fixed=TRUE))>0) {
       # control parameters specified
-      pb.control <- eval(parse(text=args[grep(pattern="pb.control", x=args, fixed=TRUE)]))
+      pb.control <- eval(parse(text=args[grep(pattern="pb.control", x=args, fixed=TRUE)]), envir=asNamespace("gamlss"))
     } else {
       # no control parameters specified - use default
-      pb.control <- eval(parse(text="pb.control()"))
+      pb.control <- eval(parse(text="pb.control()"), envir=asNamespace("gamlss"))
     }
   }
+  
+  gamlss.dist::as.family(eval(parse(text=family), envir=asNamespace("gamlss.dist")))
   
   # look for DS connections
   if(is.null(datasources)){
@@ -161,8 +162,12 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   
   # verify that 'formula' was set
   if(is.null(formula)){
-    stop(" Please provide a valid formula!", call.=FALSE)
+    stop("Please provide a valid formula!", call.=FALSE)
   }
+  if (!inherits(formula, "formula")) stop("formula should be a formula object")
+  if (!inherits(sigma.formula, "formula")) stop("sigma.formula should be a formula object")
+  if (!inherits(nu.formula, "formula")) stop("nu.formula should be a formula object")
+  if (!inherits(tau.formula, "formula")) stop("tau.formula should be a formula object")
   
   formula <- stats::as.formula(formula)
   sigma.formula <- stats::as.formula(sigma.formula)
@@ -174,15 +179,52 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   nu.formulatext <- Reduce(paste, deparse(nu.formula))
   tau.formulatext <- Reduce(paste, deparse(tau.formula))
   
-  ## check that 'family' was set
+  # check that 'family' was set
   if(is.null(family)){
-    stop(" Please provide a valid 'family' argument!", call.=FALSE)
+    stop("Please provide a valid 'family' argument!", call.=FALSE)
+  }
+  if(!(family %in% c('NO()', 'NO2()', 'BCCG()', 'BCPE()'))){
+    stop("Argument 'family' must be either 'NO()', 'NO2()', 'BCCG()' or 'BCPE()'", call.=FALSE)
   }
   
-  ## if the argument 'data' is set, check that the data frame is defined (i.e. exists) on the server site
+  # if the argument 'data' is set, check that the data frame is defined (i.e. exists) on the server site
   if(!(is.null(data))){
     defined <- isDefined(datasources, data)
   }
+  
+  # check min.values and max.values
+  if (!is.null(min.values) & !is.numeric(min.values)){
+    stop("min.values should be numeric")
+  }
+  if (!is.null(max.values) & !is.numeric(max.values)){
+    stop("max.values should be numeric")
+  }
+  if (!is.null(min.max.names) & !is.character(min.max.names)){
+    stop("min.max.names should be character")
+  }
+  if (!(length(min.max.names) == length(min.values) & length(min.values) == length(max.values))){
+    stop(paste("The length ", length(min.max.names), " of min.max.names does not match the length ",
+               length(min.values), " of min.values and the length ", 
+               length(max.values), " of max.values.", sep=""))
+  }
+  
+  # checking the checks argument
+  if (!is.logical(checks)) stop("checks should be logical TRUE or FALSE")
+  
+  # checking the parameter.fix
+  if (!is.logical(mu.fix)) stop("mu.fix should be logical TRUE or FALSE")
+  if (!is.logical(sigma.fix)) stop("sigma.fix should be logical TRUE or FALSE")
+  if (!is.logical(nu.fix)) stop("nu.fix should be logical TRUE or FALSE")
+  if (!is.logical(tau.fix)) stop("tau.fix should be logical TRUE or FALSE")
+  
+  # checking the control parameters
+  if (!(is.numeric(control) & length(control)==7)){
+    stop("control should be a numeric vector of length 7")
+  }
+  if (!(is.numeric(i.control) & length(i.control)==4)){
+    stop("i.control should be a numeric vector of length 4")
+  }
+  if (!is.logical(autostep)) stop("autostep should be logical TRUE or FALSE")
   
   ## beginning of optional checks - the process stops if any of these checks fails #
   if(checks){
@@ -247,7 +289,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   family.trans <- gsub(",", "comma_symbol", family.trans, fixed = TRUE)
   family.trans <- gsub(" ", "", family.trans, fixed = TRUE)
   familytext <- family
-  family <- gamlss.dist::as.family(eval(parse(text=family), envir=environment()))
+  family <- gamlss.dist::as.family(eval(parse(text=family), envir=asNamespace("gamlss.dist")))
   
   if(is.null(mu.coef.start.names)){
     mu.coef.start.names.trans <- NULL
@@ -315,7 +357,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   outcome <- strsplit(formulatext, "~", fixed=TRUE)[[1]][1]
   # global mean (required by most distributions)
   global.mean <- getPooledMean(datasources, outcome)
-  if (familytext=="NO()" | familytext=="NO2()"){
+  if (familytext=="NO()" | familytext=="NO2()" | familytext=="NO" | familytext=="NO2"){
     # global sd
     # attention: leads slightly different results than sd() on pooled data
     global.sd <- sqrt(getPooledVar(datasources, outcome))
@@ -336,7 +378,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
                  tau.coef.start.names=tau.coef.start.names.trans, 
                  mu.fix=mu.fix, sigma.fix=sigma.fix, 
                  nu.fix=nu.fix, tau.fix=tau.fix, global.mean=global.mean, global.sd=global.sd,
-                 control=control.trans, i.control=i.control.trans)
+                 control=control.trans, i.control=i.control.trans, autostep=autostep)
   
   study.summary.0 <- DSI::datashield.aggregate(datasources, cally1)
 
@@ -698,8 +740,12 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   tau.pb.control <- lapply(tau.pb.args, FUN=getpbcontrol)
   # set starting value for lambda if lambda is not fixed & update knots for smoother
   if (length(mod.gamlss.ds$mu.coefSmo)>0){
-    mod.gamlss.ds$mu.coefSmo[[which(!mu.fixed.lambda)]]$lambda <- mu.pb.control[[which(!mu.fixed.lambda)]]$start
     for (i in 1:length(mod.gamlss.ds$mu.coefSmo)){
+      if (mu.fixed.lambda[i]==TRUE){
+        mod.gamlss.ds$mu.coefSmo[[i]]$lambda <- as.numeric(sub(".*lambda\\s*=\\s*([0-9\\.]+).*", "\\1", mu.smoother.coef[i]))
+      } else {
+        mod.gamlss.ds$mu.coefSmo[[i]]$lambda <- mu.pb.control[[i]]$start
+      }
       name <- mod.gamlss.ds$mu.coefSmo[[i]]$name
       xl <- smoother.xl[which(smoother.names==name)]
       xr <- smoother.xr[which(smoother.names==name)]
@@ -711,8 +757,12 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     }
   }
   if (length(mod.gamlss.ds$sigma.coefSmo)>0){
-    mod.gamlss.ds$sigma.coefSmo[[which(!sigma.fixed.lambda)]]$lambda <- sigma.pb.control[[which(!sigma.fixed.lambda)]]$start
     for (i in 1:length(mod.gamlss.ds$sigma.coefSmo)){
+      if (sigma.fixed.lambda[i]==TRUE){
+        mod.gamlss.ds$sigma.coefSmo[[i]]$lambda <- as.numeric(sub(".*lambda\\s*=\\s*([0-9\\.]+).*", "\\1", sigma.smoother.coef[i]))
+      } else {
+        mod.gamlss.ds$sigma.coefSmo[[i]]$lambda <- sigma.pb.control[[i]]$start
+      }
       name <- mod.gamlss.ds$sigma.coefSmo[[i]]$name
       xl <- smoother.xl[which(smoother.names==name)]
       xr <- smoother.xr[which(smoother.names==name)]
@@ -724,8 +774,12 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     }
   }
   if (length(mod.gamlss.ds$nu.coefSmo)>0){
-    mod.gamlss.ds$nu.coefSmo[[which(!nu.fixed.lambda)]]$lambda <- nu.pb.control[[which(!nu.fixed.lambda)]]$start
     for (i in 1:length(mod.gamlss.ds$nu.coefSmo)){
+      if (nu.fixed.lambda[i]==TRUE){
+        mod.gamlss.ds$nu.coefSmo[[i]]$lambda <- as.numeric(sub(".*lambda\\s*=\\s*([0-9\\.]+).*", "\\1", nu.smoother.coef[i]))
+      } else {
+        mod.gamlss.ds$nu.coefSmo[[i]]$lambda <- nu.pb.control[[i]]$start
+      }
       name <- mod.gamlss.ds$nu.coefSmo[[i]]$name
       xl <- smoother.xl[which(smoother.names==name)]
       xr <- smoother.xr[which(smoother.names==name)]
@@ -737,8 +791,12 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     }
   }
   if (length(mod.gamlss.ds$tau.coefSmo)>0){
-    mod.gamlss.ds$tau.coefSmo[[which(!tau.fixed.lambda)]]$lambda <- tau.pb.control[[which(!tau.fixed.lambda)]]$start
     for (i in 1:length(mod.gamlss.ds$tau.coefSmo)){
+      if (tau.fixed.lambda[i]==TRUE){
+        mod.gamlss.ds$tau.coefSmo[[i]]$lambda <- as.numeric(sub(".*lambda\\s*=\\s*([0-9\\.]+).*", "\\1", tau.smoother.coef[i]))
+      } else {
+        mod.gamlss.ds$tau.coefSmo[[i]]$lambda <- tau.pb.control[[i]]$start
+      }
       name <- mod.gamlss.ds$tau.coefSmo[[i]]$name
       xl <- smoother.xl[which(smoother.names==name)]
       xr <- smoother.xr[which(smoother.names==name)]
@@ -927,11 +985,12 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
             } # MS 19-4-12
             
             if (lambda.restricted==TRUE){
-              # to be consistent with the original gamlss function we set the values for sig to NULL and NA
-              eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sigb2 <- NULL", sep="")), envir=environment())
+              # to be consistent with the original gamlss function we set the values for sig to NA
+              eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sigb2 <- NA", sep="")), envir=environment())
               eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sigb <- NA", sep="")), envir=environment())
-              eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sige2 <- NULL", sep="")), envir=environment())
+              eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sige2 <- NA", sep="")), envir=environment())
               eval(parse(text=paste("mod.gamlss.ds$", parameter, ".coefSmo[[", s, "]]$sige <- NA", sep="")), envir=environment())
+              
             }
             
             # update gamma
@@ -1164,7 +1223,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   # V) Output ----
   # Update GAMLSS Object
   #**************************************************************************
-  mod.gamlss.ds$call <- "Call to ds.gamlss"
+  mod.gamlss.ds$call <- match.call()
   
   mod.gamlss.ds$G.deviance <- G.dev
   mod.gamlss.ds$N <- N
@@ -1179,6 +1238,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
       pb.control <- lapply(mu.pb.args, FUN=getpbcontrol)
       for (i in 1:length(mod.gamlss.ds$mu.coefSmo)){
         mod.gamlss.ds$mu.nl.df <- sum(mod.gamlss.ds$mu.nl.df, mod.gamlss.ds$mu.coefSmo[[i]]$edf-2)
+        mod.gamlss.ds$mu.coefSmo[[i]]$coef <- as.matrix(mod.gamlss.ds$mu.coefSmo[[i]]$coef, ncol=1)
       }
       mod.gamlss.ds$mu.df <- mod.gamlss.ds$mu.nl.df+length(mod.gamlss.ds$mu.coefficients)
     }
@@ -1189,6 +1249,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
       mod.gamlss.ds$sigma.nl.df <- 0
       for (i in 1:length(mod.gamlss.ds$sigma.coefSmo)){
         mod.gamlss.ds$sigma.nl.df <- sum(mod.gamlss.ds$sigma.nl.df, mod.gamlss.ds$sigma.coefSmo[[i]]$edf-2)
+        mod.gamlss.ds$sigma.coefSmo[[i]]$coef <- as.matrix(mod.gamlss.ds$sigma.coefSmo[[i]]$coef, ncol=1)
       }
       mod.gamlss.ds$sigma.df <- mod.gamlss.ds$sigma.nl.df+length(mod.gamlss.ds$sigma.coefficients)
     }
@@ -1199,6 +1260,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
       mod.gamlss.ds$nu.nl.df <- 0
       for (i in 1:length(mod.gamlss.ds$nu.coefSmo)){
         mod.gamlss.ds$nu.nl.df <- sum(mod.gamlss.ds$nu.nl.df, mod.gamlss.ds$nu.coefSmo[[i]]$edf-2)
+        mod.gamlss.ds$nu.coefSmo[[i]]$coef <- as.matrix(mod.gamlss.ds$nu.coefSmo[[i]]$coef, ncol=1)
       }
       mod.gamlss.ds$nu.df <- mod.gamlss.ds$nu.nl.df+length(mod.gamlss.ds$nu.coefficients)
     }
@@ -1209,6 +1271,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
       mod.gamlss.ds$tau.nl.df <- 0
       for (i in 1:length(mod.gamlss.ds$tau.coefSmo)){
         mod.gamlss.ds$tau.nl.df <- sum(mod.gamlss.ds$tau.nl.df, mod.gamlss.ds$tau.coefSmo[[i]]$edf-2)
+        mod.gamlss.ds$tau.coefSmo[[i]]$coef <- as.matrix(mod.gamlss.ds$tau.coefSmo[[i]]$coef, ncol=1)
       }
       mod.gamlss.ds$tau.df <- mod.gamlss.ds$tau.nl.df+length(mod.gamlss.ds$tau.coefficients)
     }
