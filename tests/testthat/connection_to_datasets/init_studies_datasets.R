@@ -61,15 +61,6 @@ init.studies.dataset.gamlss <- function(variables)
     {
       ds.test_env$login.data <- setupGAMLSSTest(packages=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist"),
                                                 env=ds.test_env)
-      # dslite.server <- DSLite::newDSLiteServer(tables=list(gamlss1=ds.test_env$local.values.1,
-      #                                                      gamlss2=ds.test_env$local.values.2,
-      #                                                      gamlss3=ds.test_env$local.values.3),
-      #                                         config = DSLite::defaultDSConfiguration(include=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist")))
-      # builder <- DSI::newDSLoginBuilder()
-      # builder$append(server = "server1", url="dslite.server", table="gamlss1", driver="DSLiteDriver")
-      # builder$append(server = "server2", url="dslite.server", table="gamlss2", driver="DSLiteDriver")
-      # builder$append(server = "server3", url="dslite.server", table="gamlss3", driver="DSLiteDriver")
-      # ds.test_env$login.data <- builder$build()
     }
     ds.test_env$stats.var <- variables
     
