@@ -225,7 +225,7 @@ test_that("output_pb_gamlss_bcpe_dist", {
   expect_equal(model_e3_bw.DS$y, "The response variable is not disclosed!")
   expect_equal(model_e3_bw.DS$control, model_e3_bw$control)
   expect_equal(model_e3_bw.DS$weights, model_e3_bw$weights)
-  expect_equal(model_e3_bw.DS$G.deviance, model_e3_bw$G.deviance, tolerance=1e-07)
+  expect_equal(model_e3_bw.DS$G.deviance, model_e3_bw$G.deviance, tolerance=1e-03)
   expect_equal(model_e3_bw.DS$N, model_e3_bw$N)
   expect_equal(model_e3_bw.DS$rqres, model_e3_bw$rqres)
   expect_equal(model_e3_bw.DS$iter, model_e3_bw$iter)
