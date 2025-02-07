@@ -73,8 +73,6 @@
 #' \code{i.control=c(0.001, 50, 30, 0.001)}.
 #' @param autostep logical, indicating whether the steps should be halved automatically 
 #' if the new global deviance is greater than the old one. The default is \code{autostep=TRUE}.
-#' @param num.nearest.neigh the number of the nearest neighbours for which the mean is calculated
-#' to obtain the anonymized quantile residuals. The default is \code{num.nearest.neigh=3}.
 #' @param datasources  a list of \code{\link[DSI]{DSConnection-class}} 
 #' objects obtained after login. If the \code{datasources} argument is not specified
 #' the default set of connections will be used: see \code{\link[DSI]{datashield.connections_default}}.
@@ -91,7 +89,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
                       mu.fix = FALSE, sigma.fix = FALSE, nu.fix = FALSE, tau.fix = FALSE, 
                       control = c(0.001, 20, 1, 1, 1, 1, Inf),
                       i.control = c(0.001, 50, 30, 0.001), 
-                      autostep = TRUE, k = 3, datasources = NULL){
+                      autostep = TRUE, datasources = NULL){
   
   #**************************************************************************
   # I) Preparation ----
@@ -1200,17 +1198,10 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   mod.gamlss.ds$aic <- G.dev + 2*mod.gamlss.ds$df.fit
   mod.gamlss.ds$sbc <- G.dev + log(noObs)*mod.gamlss.ds$df.fit
   
-  # Residuals
-  cally7 <- call('gamlssDS7', family=family.trans, data=data, mu.fix=mu.fix, sigma.fix=sigma.fix, 
-                 nu.fix=nu.fix, tau.fix=tau.fix,
-                 control=control.trans, i.control=i.control.trans, k=k)
-  study.summary.0 <- DSI::datashield.aggregate(datasources, cally7)
-  residuals <- NULL
-  
-  for(s in 1:numstudies){
-    residuals <- c(residuals, study.summary.0[[s]])
-  }
-  mod.gamlss.ds$residuals <- residuals
+  ## delete temporary variables (prefix temp_) will be deleted
+  symbols.ds <- DSI::datashield.symbols(conns=ds.test_env$connections)[[1]]
+  temp.variables <- symbols.ds[grep("^temp_", symbols.ds)]
+  DSI::datashield.rm(conns=ds.test_env$connections, temp.variables)
   
   return(mod.gamlss.ds)
   
