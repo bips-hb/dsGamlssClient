@@ -56,6 +56,32 @@ ds.predict.gamlss <- function(object, newdata, what="mu",
     return(B)
   } # end create.bbase function
   
+  ## Ensure the input parameters are properly specified
+  # object
+  if(!(gamlss::is.gamlss(object))){
+    stop("Please provide a valid ds.gamlss.object to derive the predictions.")
+  }
+  if(is.null(object$dataname)){
+    stop("The function ds.predict.gamlss is not compatible with the output from gamlss(). Please provide the output from ds.gamlss() instead.")
+  }
+  
+  # newdata
+  if(!is.data.frame(newdata)){
+    stop("Please provide a valid data.frame as newdata that can be used to derive the predictions from the ds.gamlss.object.")
+  }
+  
+  # what
+  if(!what %in% object$parameters){
+    stop(paste("The parameter what=", what, " is not among the distribution parameters from the family of the ds.gamlss.object ", paste(object$parameters, collapse=", "), ".", sep=""))
+  }
+  
+  # type
+  if(!type %in% c("link", "response")){
+    stop(paste("The specified type ", type, " should either be 'link' or 'response'.", sep=""))
+  }
+  
+  pb <- getFromNamespace("pb", "gamlss")
+  
   ## Get estimated model parameters for distribution parameter what
   par.coef <- eval(parse(text=paste("object$", what, ".coefficients", sep="")), envir=environment())
   par.coef.names <- names(par.coef)
@@ -91,10 +117,10 @@ ds.predict.gamlss <- function(object, newdata, what="mu",
       knots <- eval(parse(text=paste("object$", what, ".coefSmo[[", i, "]]$knots", sep="")), envir=environment())
       if (length(grep(pattern="pb.control", x=par.pb.args[[i]], fixed=TRUE))>0) {
         # control parameters specified
-        pb.control <- eval(parse(text=par.pb.args[[i]][grep(pattern="pb.control", x=par.pb.args[[i]], fixed=TRUE)]))
+        pb.control <- eval(parse(text=par.pb.args[[i]][grep(pattern="pb.control", x=par.pb.args[[i]], fixed=TRUE)]), envir=asNamespace("gamlss"))
       } else {
         # no control parameters specified - use default
-        pb.control <- eval(parse(text="pb.control()"))
+        pb.control <- eval(parse(text="pb.control()"), envir=asNamespace("gamlss"))
       }
       x <- eval(parse(text=paste("newdata$", name, sep="")), envir=parent.frame())
       
@@ -110,7 +136,7 @@ ds.predict.gamlss <- function(object, newdata, what="mu",
   ## Predict the parameter
   if (type=="response") {
     # get the link function
-    family <- gamlss.dist::as.family(eval(parse(text=paste(object$family[1], "()", sep="")), envir=environment()))
+    family <- gamlss.dist::as.family(eval(parse(text=paste(object$family[1], "()", sep="")), envir=asNamespace("gamlss.dist")))
     par <- eval(parse(text=paste("family$", what, ".linkinv(eta)", sep="")), envir=environment())
     return(par)
   } else {
