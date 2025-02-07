@@ -148,8 +148,6 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     }
   }
   
-  gamlss.dist::as.family(eval(parse(text=family), envir=asNamespace("gamlss.dist")))
-  
   # look for DS connections
   if(is.null(datasources)){
     datasources <- DSI::datashield.connections_find()
