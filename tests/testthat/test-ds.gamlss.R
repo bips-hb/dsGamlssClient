@@ -66,7 +66,7 @@ test_that("output_parametric_gamlss_normal_dist", {
   expect_equal(model_e3_bw.DS$method, model_e3_bw$method)
   expect_equal(model_e3_bw.DS$contrasts, model_e3_bw$contrasts)
   expect_equal(model_e3_bw.DS$converged, model_e3_bw$converged)
-  expect_length(model_e3_bw.DS$residuals, length(model_e3_bw$residuals)) #anonymized version of the residuals
+  expect_equal(model_e3_bw.DS$residuals, "The residuals of the model are not disclosed!")
   expect_equal(model_e3_bw.DS$noObs, model_e3_bw$noObs)
   expect_equal(model_e3_bw.DS$mu.fv, "The fitted values of the mu model are not disclosed!")
   expect_equal(model_e3_bw.DS$mu.lp, "The linear predictors of the mu model are not disclosed!")
@@ -101,6 +101,7 @@ test_that("output_parametric_gamlss_normal_dist", {
   expect_equal(model_e3_bw.DS$P.deviance, model_e3_bw$P.deviance, tolerance=1e-07)
   expect_equal(model_e3_bw.DS$aic, model_e3_bw$aic, tolerance=1e-07)
   expect_equal(model_e3_bw.DS$sbc, model_e3_bw$sbc, tolerance=1e-07)
+  expect_equal(DSI::datashield.symbols(conns=ds.test_env$connections)[[1]], "D")
 })
 
 
@@ -135,7 +136,7 @@ test_that("output_parametric_gamlss_bcpe_dist", {
   expect_equal(model_e3_bw.DS$method, model_e3_bw$method)
   expect_equal(model_e3_bw.DS$contrasts, model_e3_bw$contrasts)
   expect_equal(model_e3_bw.DS$converged, model_e3_bw$converged)
-  expect_length(model_e3_bw.DS$residuals, length(model_e3_bw$residuals)) #anonymized version of the residuals
+  expect_equal(model_e3_bw.DS$residuals, "The residuals of the model are not disclosed!")
   expect_equal(model_e3_bw.DS$noObs, model_e3_bw$noObs)
   expect_equal(model_e3_bw.DS$mu.fv, "The fitted values of the mu model are not disclosed!")
   expect_equal(model_e3_bw.DS$mu.lp, "The linear predictors of the mu model are not disclosed!")
@@ -199,6 +200,7 @@ test_that("output_parametric_gamlss_bcpe_dist", {
   expect_equal(model_e3_bw.DS$P.deviance, model_e3_bw$P.deviance, tolerance=1e-07)
   expect_equal(model_e3_bw.DS$aic, model_e3_bw$aic, tolerance=1e-07)
   expect_equal(model_e3_bw.DS$sbc, model_e3_bw$sbc, tolerance=1e-07)
+  expect_equal(DSI::datashield.symbols(conns=ds.test_env$connections)[[1]], "D")
 })
 
 test_that("output_pb_gamlss_bcpe_dist", {
@@ -233,7 +235,7 @@ test_that("output_pb_gamlss_bcpe_dist", {
   expect_equal(model_e3_bw.DS$method, model_e3_bw$method)
   expect_equal(model_e3_bw.DS$contrasts, model_e3_bw$contrasts)
   expect_equal(model_e3_bw.DS$converged, model_e3_bw$converged)
-  expect_length(model_e3_bw.DS$residuals, length(model_e3_bw$residuals)) #anonymized version of the residuals
+  expect_equal(model_e3_bw.DS$residuals, "The residuals of the model are not disclosed!")
   expect_equal(model_e3_bw.DS$noObs, model_e3_bw$noObs)
   expect_equal(model_e3_bw.DS$mu.fv, "The fitted values of the mu model are not disclosed!")
   expect_equal(model_e3_bw.DS$mu.lp, "The linear predictors of the mu model are not disclosed!")
@@ -345,6 +347,7 @@ test_that("output_pb_gamlss_bcpe_dist", {
   expect_equal(model_e3_bw.DS$P.deviance, model_e3_bw$P.deviance, tolerance=1e-03)
   expect_equal(model_e3_bw.DS$aic, model_e3_bw$aic, tolerance=1e-03)
   expect_equal(model_e3_bw.DS$sbc, model_e3_bw$sbc, tolerance=1e-03)
+  expect_equal(DSI::datashield.symbols(conns=ds.test_env$connections)[[1]], "D")
 })
 
 #
