@@ -48,34 +48,6 @@
 #' of the model. Default \code{checks=FALSE}.
 #' @param method a character indicating the algorithm for GAMLSS. Currently only the
 #' Rigby and Stasinopolous algorithm (\code{method='RS'}) is implemented. 
-#' @param mu.coef.start optional vector of regression coefficients to compute improved 
-#' start values for mu. Default NULL.
-#' @param sigma.coef.start optional vector of regression coefficients to compute improved
-#' start values for sigma. Default NULL.
-#' @param nu.coef.start optional vector of regression coefficients to compute improved
-#' start values for nu. Default NULL.
-#' @param tau.coef.start optional vector of regression coefficients to compute improved
-#' start values for tau. Default NULL.
-#' @param mu.coef.start.names vector with names for the regression coefficients in 
-#' \code{mu.coef.start}. These names are needed to obtain the design matrix to compute the
-#' improved start values for mu. If values are given in \code{mu.coef.start} but 
-#' \code{mu.coef.start.names} is NULL then the same formula as in \code{formula} is used to
-#' obtain the design matrix. Default NULL.
-#' @param sigma.coef.start.names vector with names for the regression coefficients in 
-#' \code{sigma.coef.start}. These names are needed to obtain the design matrix to compute the
-#' improved start values for sigma. If values are given in \code{sigma.coef.start} but 
-#' \code{sigma.coef.start.names} is NULL then the same formula as in \code{sigma.formula} 
-#' is used to obtain the design matrix. Default NULL.
-#' @param nu.coef.start.names vector with names for the regression coefficients in 
-#' \code{nu.coef.start}. These names are needed to obtain the design matrix to compute the
-#' improved start values for nu. If values are given in \code{nu.coef.start} but 
-#' \code{nu.coef.start.names} is NULL then the same formula as in \code{nu.formula} 
-#' is used to obtain the design matrix. Default NULL.
-#' @param tau.coef.start.names vector with names for the regression coefficients in 
-#' \code{tau.coef.start}. These names are needed to obtain the design matrix to compute the
-#' improved start values for tau. If values are given in \code{tau.coef.start} but 
-#' \code{tau.coef.start.names} is NULL then the same formula as in \code{tau.formula} 
-#' is used to obtain the design matrix. Default NULL.
 #' @param mu.fix logical, indicating whether the mu parameter should be kept fixed
 #' in the fitting processes. Default \code{mu.fix=FALSE}.
 #' @param sigma.fix logical, indicating whether the sigma parameter should be kept
@@ -116,10 +88,6 @@
 ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.formula = ~1,
                       family = 'NO()', data = NULL, min.values = NULL, max.values = NULL, 
                       min.max.names = NULL, checks = FALSE,
-                      mu.coef.start = NULL, sigma.coef.start = NULL, 
-                      nu.coef.start = NULL, tau.coef.start = NULL, 
-                      mu.coef.start.names = NULL, sigma.coef.start.names = NULL, 
-                      nu.coef.start.names = NULL, tau.coef.start.names = NULL, 
                       mu.fix = FALSE, sigma.fix = FALSE, nu.fix = FALSE, tau.fix = FALSE, 
                       control = c(0.001, 20, 1, 1, 1, 1, Inf),
                       i.control = c(0.001, 50, 30, 0.001), 
@@ -288,50 +256,6 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   family.trans <- gsub(" ", "", family.trans, fixed = TRUE)
   familytext <- family
   family <- gamlss.dist::as.family(eval(parse(text=family), envir=asNamespace("gamlss.dist")))
-  
-  if(is.null(mu.coef.start.names)){
-    mu.coef.start.names.trans <- NULL
-  } else {
-    mu.coef.start.names.trans <- paste0(mu.coef.start.names, collapse=",")
-    mu.coef.start.names.trans <- gsub("(", "left_parenthesis", mu.coef.start.names.trans, fixed = TRUE)
-    mu.coef.start.names.trans <- gsub(")", "right_parenthesis", mu.coef.start.names.trans, fixed = TRUE)
-    mu.coef.start.names.trans <- gsub("*", "asterisk_symbol", mu.coef.start.names.trans, fixed = TRUE)
-    mu.coef.start.names.trans <- gsub("^", "caret_symbol", mu.coef.start.names.trans, fixed = TRUE)
-    mu.coef.start.names.trans <- gsub(" ", "", mu.coef.start.names.trans, fixed = TRUE)
-  }
-  
-  if(is.null(sigma.coef.start.names)){
-    sigma.coef.start.names.trans <- NULL
-  } else {
-    sigma.coef.start.names.trans <- paste0(sigma.coef.start.names, collapse=",")
-    sigma.coef.start.names.trans <- gsub("(", "left_parenthesis", sigma.coef.start.names.trans, fixed = TRUE)
-    sigma.coef.start.names.trans <- gsub(")", "right_parenthesis", sigma.coef.start.names.trans, fixed = TRUE)
-    sigma.coef.start.names.trans <- gsub("*", "asterisk_symbol", sigma.coef.start.names.trans, fixed = TRUE)
-    sigma.coef.start.names.trans <- gsub("^", "caret_symbol", sigma.coef.start.names.trans, fixed = TRUE)
-    sigma.coef.start.names.trans <- gsub(" ", "", sigma.coef.start.names.trans, fixed = TRUE)
-  }
-
-  if(is.null(nu.coef.start.names)){
-    nu.coef.start.names.trans <- NULL
-  } else {
-    nu.coef.start.names.trans <- paste0(nu.coef.start.names, collapse=",")
-    nu.coef.start.names.trans <- gsub("(", "left_parenthesis", nu.coef.start.names.trans, fixed = TRUE)
-    nu.coef.start.names.trans <- gsub(")", "right_parenthesis", nu.coef.start.names.trans, fixed = TRUE)
-    nu.coef.start.names.trans <- gsub("*", "asterisk_symbol", nu.coef.start.names.trans, fixed = TRUE)
-    nu.coef.start.names.trans <- gsub("^", "caret_symbol", nu.coef.start.names.trans, fixed = TRUE)
-    nu.coef.start.names.trans <- gsub(" ", "", nu.coef.start.names.trans, fixed = TRUE)
-  }
-
-  if(is.null(tau.coef.start.names)){
-    tau.coef.start.names.trans <- NULL
-  } else {
-    tau.coef.start.names.trans <- paste0(tau.coef.start.names, collapse=",")
-    tau.coef.start.names.trans <- gsub("(", "left_parenthesis", tau.coef.start.names.trans, fixed = TRUE)
-    tau.coef.start.names.trans <- gsub(")", "right_parenthesis", tau.coef.start.names.trans, fixed = TRUE)
-    tau.coef.start.names.trans <- gsub("*", "asterisk_symbol", tau.coef.start.names.trans, fixed = TRUE)
-    tau.coef.start.names.trans <- gsub("^", "caret_symbol", tau.coef.start.names.trans, fixed = TRUE)
-    tau.coef.start.names.trans <- gsub(" ", "", tau.coef.start.names.trans, fixed = TRUE)
-  }
 
   # transform the control parameters into characters
   control.trans <- paste0(as.character(control), collapse=",")
@@ -368,12 +292,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   ## Initialize the distribution parameter estimates on the server side
   cally1 <- call('gamlssDS1', formula=formula.trans, sigma.formula=sigma.formula.trans, 
                  nu.formula=nu.formula.trans, tau.formula=tau.formula.trans,
-                 family=family.trans, data=data, mu.coef.start=mu.coef.start, 
-                 sigma.coef.start=sigma.coef.start, nu.coef.start=nu.coef.start,
-                 tau.coef.start=tau.coef.start, mu.coef.start.names=mu.coef.start.names.trans, 
-                 sigma.coef.start.names=sigma.coef.start.names.trans, 
-                 nu.coef.start.names=nu.coef.start.names.trans, 
-                 tau.coef.start.names=tau.coef.start.names.trans, 
+                 family=family.trans, data=data, 
                  mu.fix=mu.fix, sigma.fix=sigma.fix, 
                  nu.fix=nu.fix, tau.fix=tau.fix, global.mean=global.mean, global.sd=global.sd,
                  control=control.trans, i.control=i.control.trans, autostep=autostep)
