@@ -80,7 +80,7 @@ ds.predict.gamlss <- function(object, newdata, what="mu",
     stop(paste("The specified type ", type, " should either be 'link' or 'response'.", sep=""))
   }
   
-  pb <- getFromNamespace("pb", "gamlss")
+  pb <- utils::getFromNamespace("pb", "gamlss")
   
   ## Get estimated model parameters for distribution parameter what
   par.coef <- eval(parse(text=paste("object$", what, ".coefficients", sep="")), envir=environment())
