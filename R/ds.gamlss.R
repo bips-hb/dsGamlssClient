@@ -15,8 +15,7 @@
 #'                          \code{gamlssDS3},
 #'                          \code{gamlssDS4},
 #'                          \code{gamlssDS5},
-#'                          \code{gamlssDS6},
-#'                          \code{gamlssDS7}
+#'                          \code{gamlssDS6}
 #' 
 #' @param formula a formula object, with the response on the left of an ~ operator, 
 #' and the terms, separated by + operators, on the right. Currently, only penalised 
@@ -766,7 +765,6 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
           #*A.1.i.a) WLS ----
           ## call second component of gamlssDS to generate matrices and vectors for WLS to estimate beta
           cally2 <- call('gamlssDS2', parameter=parameter, family=family.trans, data=data, 
-                         mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                          mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                          nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                          control=control.trans, i.control=i.control.trans)
@@ -861,7 +859,6 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
             
             ## call third component of gamlssDS to generate matrices and vectors for PWLS to estimate gamma
             cally3 <- call('gamlssDS3', parameter=parameter, smoother=s, family=family.trans, data=data, 
-                           mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                            mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                            nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                            mu.gamma.vect=mu.gamma.vect.trans, sigma.gamma.vect=sigma.gamma.vect.trans,
@@ -944,7 +941,6 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
                   # estimate lambda
                   # call fourth component of gamlssDS to generate matrices and vectors for PWLS to estimate gamma
                   cally4 <- call('gamlssDS4', parameter=parameter, smoother=s, family=family.trans, data=data, 
-                                 mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                                  mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                                  nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                                  mu.gamma.vect=mu.gamma.vect.trans, sigma.gamma.vect=sigma.gamma.vect.trans,
@@ -1005,7 +1001,6 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
             
             ## call fifth component of gamlssDS to check convergence of backfitting
             cally5 <- call('gamlssDS5', parameter=parameter, family=family.trans, data=data,
-                           mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                            mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                            nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                            mu.gamma.vect=mu.gamma.vect.trans, sigma.gamma.vect=sigma.gamma.vect.trans,
@@ -1029,7 +1024,6 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
         
         #*A.1.ii) Stopping criterion inner iteration ----
         cally6 <- call('gamlssDS6', parameter=parameter, family=family.trans, data=data, 
-                       mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                        mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                        nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                        mu.gamma.vect=mu.gamma.vect.trans, sigma.gamma.vect=sigma.gamma.vect.trans,
