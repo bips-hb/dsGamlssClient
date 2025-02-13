@@ -8,7 +8,12 @@ Description: DataSHIELD client side functions to fit Generalized Additive Models
 RoxygenNote: 7.3.2
 Encoding: UTF-8
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    DSOpal,
+    DSLite,
+    gamlss,
+    dsGamlss,
+    dsBase
 Config/testthat/edition: 3
 Imports: 
     DSI,
