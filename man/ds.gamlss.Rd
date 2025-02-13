@@ -15,11 +15,6 @@ ds.gamlss(
   max.values = NULL,
   min.max.names = NULL,
   checks = FALSE,
-  method = "RS",
-  mu.coef.start = NULL,
-  sigma.coef.start = NULL,
-  nu.coef.start = NULL,
-  tau.coef.start = NULL,
   mu.fix = FALSE,
   sigma.fix = FALSE,
   nu.fix = FALSE,
@@ -27,72 +22,59 @@ ds.gamlss(
   control = c(0.001, 20, 1, 1, 1, 1, Inf),
   i.control = c(0.001, 50, 30, 0.001),
   autostep = TRUE,
-  k = 3,
   datasources = NULL
 )
 }
 \arguments{
 \item{formula}{a formula object, with the response on the left of an ~ operator, 
-and the terms, separated by + operators, on the right. Nonparametric smoothing
-terms are indicated by pb() for penalised beta splines, cs for smoothing splines, 
-lo for loess smooth terms and random or ra for random terms, 
-e.g. 'y~cs(x,df=5)+x1+x2*x3'.}
+and the terms, separated by + operators, on the right. Currently, only penalised 
+beta splines, indicated by \code{pb()}, are supported for nonparametric smoothing, 
+e.g. \code{'y~pb(x,df=5)+x1+x2*x3'}.}
 
 \item{sigma.formula}{a formula object for fitting a model to the sigma parameter,
-as in the formula above, e.g. sigma.formula='~cs(x,df=5)'.}
+as in the formula above, e.g. \code{sigma.formula='~pb(x,df=5)'}.}
 
 \item{nu.formula}{a formula object for fitting a model to the nu parameter, 
-e.g. nu.formula='~x'.}
+e.g. \code{nu.formula='~x'}.}
 
 \item{tau.formula}{a formula object for fitting a model to the tau parameter, 
-e.g. tau.formula='~cs(x,df=2)'.}
+e.g. \code{tau.formula='~pb(x,df=2)'}.}
 
-\item{family}{a gamlss.family object, which is used to define the distribution 
-and the link functions of the various parameters. The distribution families 
-supported by gamlss() can be found in gamlss.family. Functions such as 'BI()' 
-(binomial) produce a family object. Also can be given without the parentheses
-i.e. 'BI'. Family functions can take arguments, as in 'BI(mu.link=probit)'.}
+\item{family}{a string, specifying the gamlss.family for model fitting, 
+which is used to define the distribution and the link functions of the various parameters. 
+Currently, the following families are supported: \code{family=c('NO()', 'NO2()', 'BCCG()', 'BCPE()')}. 
+Details on the distributions can be found in \code{\link[gamlss.dist]{gamlss.family}}. 
+Default \code{family='NO()'}.}
 
 \item{data}{a data frame containing the variables occurring in the formula. 
 If this is missing, the variables should be on the parent environment.}
 
 \item{min.values}{numeric vector. Allows to specify minimum values for the covariates
-which are used to determine the knots for pb(). If NULL an anonymized (noisy)
-minimum is used instead. Default NULL.}
+which are used to determine the knots for \code{pb()}. If \code{NULL} an anonymized (noisy)
+minimum is used instead. Default \code{min.values=NULL}.}
 
 \item{max.values}{numeric vector. Allows to specify maximum values for the covariates
-which are used to determine the knots for pb(). If NULL an anonymized (noisy)
-maximum is used instead. Default NULL.}
+which are used to determine the knots for \code{pb()}. If NULL an anonymized (noisy)
+maximum is used instead. Default \code{max.values=NULL}.}
 
 \item{min.max.names}{a character vector giving the names for the minimum and
 maximum values. Only required if \code{min.values} or \code{max.values} are given. 
-Default NULL.}
+Default \code{min.max.names=NULL}.}
 
-\item{checks}{logical. If TRUE \code{ds.gamlss} checks the structural integrity 
-of the model. Default FALSE.}
-
-\item{method}{a character indicating the algorithm for GAMLSS. Currently only the
-Rigby and Stasinopolous algorithm (\code{method='RS'}) is implemented.}
-
-\item{mu.coef.start}{vector of initial values for the regression coefficients for mu}
-
-\item{sigma.coef.start}{vector of initial values for the regression coefficients for sigma}
-
-\item{nu.coef.start}{vector of initial values for the regression coefficients for nu}
-
-\item{tau.coef.start}{vector of initial values for the regression coefficients for tau}
+\item{checks}{logical. If \code{checks=TRUE} \code{ds.gamlss} checks the structural integrity 
+of the model. Default \code{checks=FALSE}.}
 
 \item{mu.fix}{logical, indicating whether the mu parameter should be kept fixed
-in the fitting processes.}
+in the fitting processes. Default \code{mu.fix=FALSE}.}
 
 \item{sigma.fix}{logical, indicating whether the sigma parameter should be kept
-fixed in the fitting processes.}
+fixed in the fitting processes. Default \code{sigma.fix=FALSE}.}
 
 \item{nu.fix}{logical, indicating whether the nu parameter should be kept fixed 
-in the fitting processes.}
+in the fitting processes. Default \code{nu.fix=FALSE}.}
 
 \item{tau.fix}{logical, indicating whether the tau parameter should be kept fixed
-in the fitting processes.}
+in the fitting processes. Default \code{tau.fix=FALSE}.}
 
 \item{control}{this sets the control parameters of the outer iterations algorithm 
 using the gamlss.control function. This is a vector of 7 numeric values: (i) c.crit 
@@ -101,7 +83,7 @@ the algorithm), (iii) mu.step (the step length for the parameter mu), (iv) sigma
 (the step length for the parameter sigma), (v) nu.step (the step length for the
 parameter nu), (vi) tau.step (the step length for the parameter tau), (vii) gd.tol
 (global deviance tolerance level). The default values for these 7 parameters are 
-set to c(0.001, 20, 1, 1, 1, 1, Inf).}
+set to \code{control=c(0.001, 20, 1, 1, 1, 1, Inf)}.}
 
 \item{i.control}{this sets the control parameters of the inner iterations of the 
 RS algorithm using the glim.control function. This is a vector of 4 numeric values: 
@@ -109,20 +91,20 @@ RS algorithm using the glim.control function. This is a vector of 4 numeric valu
 cycles of the algorithm), (iii) bf.cyc (the number of cycles of the backfitting 
 algorithm), (iv) bf.tol (the convergence criterion (tolerance level) for the 
 backfitting algorithm). The default values for these 4 parameters are set to 
-c(0.001, 50, 30, 0.001).}
+\code{i.control=c(0.001, 50, 30, 0.001)}.}
 
 \item{autostep}{logical, indicating whether the steps should be halved automatically 
-if the new global deviance is greater than the old one. The default is TRUE.}
-
-\item{k}{the number of the nearest neighbours for which the mean is calculated
-to obtain the anonymized quantile residuals. The default is 3.}
+if the new global deviance is greater than the old one. The default is \code{autostep=TRUE}.}
 
 \item{datasources}{a list of \code{\link[DSI]{DSConnection-class}} 
 objects obtained after login. If the \code{datasources} argument is not specified
 the default set of connections will be used: see \code{\link[DSI]{datashield.connections_default}}.}
+
+\item{method}{a character indicating the algorithm for GAMLSS. Currently only the
+Rigby and Stasinopolous algorithm (\code{method='RS'}) is implemented.}
 }
 \value{
-a gamlss object with all components as in the native R gamlss function. 
+a gamlss object with all components as in the native R \code{\link[gamlss]{gamlss}} function. 
 Individual-level information like the components y (the response response) and 
 residuals (the normalised quantile residuals of the model) are not disclosed to 
 the client-side.
@@ -138,15 +120,14 @@ case, the data are co-analysed (when using \code{ds.gamlss})  by using an approa
 that is mathematically equivalent to placing all individual-level data from all sources
 in one central warehouse and analysing those data using the conventional 
 \code{gamlss()} function in R. For additional details see the help header of gamlss
-functions in native R gamlss package.
+functions in native R \code{\link[gamlss]} package.
 
 Server functions called: \code{gamlssDS1}, 
                          \code{gamlssDS2},
                          \code{gamlssDS3},
                          \code{gamlssDS4},
                          \code{gamlssDS5},
-                         \code{gamlssDS6},
-                         \code{gamlssDS7}
+                         \code{gamlssDS6}
 }
 \author{
 Annika Swenne
