@@ -99,9 +99,6 @@ if the new global deviance is greater than the old one. The default is \code{aut
 \item{datasources}{a list of \code{\link[DSI]{DSConnection-class}} 
 objects obtained after login. If the \code{datasources} argument is not specified
 the default set of connections will be used: see \code{\link[DSI]{datashield.connections_default}}.}
-
-\item{method}{a character indicating the algorithm for GAMLSS. Currently only the
-Rigby and Stasinopolous algorithm (\code{method='RS'}) is implemented.}
 }
 \value{
 a gamlss object with all components as in the native R \code{\link[gamlss]{gamlss}} function. 
@@ -120,7 +117,7 @@ case, the data are co-analysed (when using \code{ds.gamlss})  by using an approa
 that is mathematically equivalent to placing all individual-level data from all sources
 in one central warehouse and analysing those data using the conventional 
 \code{gamlss()} function in R. For additional details see the help header of gamlss
-functions in native R \code{\link[gamlss]} package.
+functions in native R \code{\link[gamlss]{gamlss}} package.
 
 Server functions called: \code{gamlssDS1}, 
                          \code{gamlssDS2},

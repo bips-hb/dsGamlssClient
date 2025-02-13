@@ -8,7 +8,7 @@
 #' that is mathematically equivalent to placing all individual-level data from all sources
 #' in one central warehouse and analysing those data using the conventional 
 #' \code{gamlss()} function in R. For additional details see the help header of gamlss
-#' functions in native R \code{\link[gamlss]} package.
+#' functions in native R \code{\link[gamlss]{gamlss}} package.
 #' 
 #' Server functions called: \code{gamlssDS1}, 
 #'                          \code{gamlssDS2},
@@ -45,8 +45,6 @@
 #' Default \code{min.max.names=NULL}.
 #' @param checks logical. If \code{checks=TRUE} \code{ds.gamlss} checks the structural integrity 
 #' of the model. Default \code{checks=FALSE}.
-#' @param method a character indicating the algorithm for GAMLSS. Currently only the
-#' Rigby and Stasinopolous algorithm (\code{method='RS'}) is implemented. 
 #' @param mu.fix logical, indicating whether the mu parameter should be kept fixed
 #' in the fitting processes. Default \code{mu.fix=FALSE}.
 #' @param sigma.fix logical, indicating whether the sigma parameter should be kept
@@ -1045,7 +1043,6 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
             # autostep iteration (if deviance increased)
             for(autostep.count in 1:5){
               cally6 <- call('gamlssDS6', parameter=parameter, family=family.trans, data=data, 
-                             mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                              mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                              nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                              mu.gamma.vect=mu.gamma.vect.trans, sigma.gamma.vect=sigma.gamma.vect.trans,
@@ -1063,7 +1060,6 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
           } else {
             # only save parameter estimates (for 1st inner iteration or if deviance did not increase)
             cally6 <- call('gamlssDS6', parameter=parameter, family=family.trans, data=data,
-                           mu.fix=mu.fix, sigma.fix=sigma.fix, nu.fix=nu.fix, tau.fix=tau.fix,
                            mu.beta.vect=mu.beta.vect.trans, sigma.beta.vect=sigma.beta.vect.trans,
                            nu.beta.vect=nu.beta.vect.trans, tau.beta.vect=tau.beta.vect.trans,
                            mu.gamma.vect=mu.gamma.vect.trans, sigma.gamma.vect=sigma.gamma.vect.trans,
@@ -1193,9 +1189,9 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   mod.gamlss.ds$sbc <- G.dev + log(noObs)*mod.gamlss.ds$df.fit
   
   ## delete temporary variables (prefix temp_) will be deleted
-  symbols.ds <- DSI::datashield.symbols(conns=ds.test_env$connections)[[1]]
+  symbols.ds <- DSI::datashield.symbols(conns=datasources)[[1]]
   temp.variables <- symbols.ds[grep("^temp_", symbols.ds)]
-  DSI::datashield.rm(conns=ds.test_env$connections, temp.variables)
+  DSI::datashield.rm(conns=datasources, temp.variables)
   
   return(mod.gamlss.ds)
   
