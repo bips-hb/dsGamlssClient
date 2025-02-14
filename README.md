@@ -6,7 +6,24 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of dsGamlssClient is to …
+The dsGamlssClient package is a DataSHIELD client-side package that
+includes the server-side functions to fit Generalized Additive Models
+for Location, Scale and Shape (GAMLSS) \[1\] using DataSHIELD.
+
+DataSHIELD is a software package which allows you to do non-disclosive
+federated analysis on sensitive data. The DataSHIELD website
+(<https://www.datashield.org>) has in depth descriptions of what it is,
+how it works and how to install it. A key point to highlight is that
+DataSHIELD has a client-server infrastructure, so the dsGamlssClient
+package needs to be used in conjunction with the dsGamlss package
+(<https://github.com/bips-hb/dsGamlss>) - trying to use one without the
+other makes no sense.
+
+Detailed instructions on how to install DataSHIELD are at
+<https://www.datashield.org/wiki>.
+
+Discussion and help with using DataSHIELD can be obtained from the
+DataSHIELD Forum <https://datashield.discourse.group/>
 
 ## Installation
 
@@ -14,39 +31,12 @@ You can install the development version of dsGamlssClient from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("pak")
-pak::pak("bips-hb/dsGamlssClient")
+# install.packages("devtools")
+devtools::install_github("bips-hb/dsGamlssClient")
 ```
 
-## Example
+## References
 
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(dsGamlssClient)
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+1.  Rigby RA, Stasinopoulos DM. Generalized additive models for
+    location, scale and shape. Journal of the Royal Statistical Society:
+    Series C (Applied Statistics). 2005;54(3):507-54.
