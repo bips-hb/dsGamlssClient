@@ -316,12 +316,24 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   sigma.num.par.gamma <- NULL
   nu.num.par.gamma <- NULL
   tau.num.par.gamma <- NULL
-  
   mu.coef.names <- NULL
   sigma.coef.names <- NULL
   nu.coef.names <- NULL
   tau.coef.names <- NULL
-  
+  y.invalid <- NULL
+  mu.par.invalid <- NULL
+  sigma.par.invalid <- NULL
+  nu.par.invalid <- NULL
+  tau.par.invalid <- NULL
+  gamlss.saturation.invalid <- NULL
+  errorMessage <- NULL
+  weights <- NULL
+  N <- NULL
+  noObs <- NULL
+  mu.offset <- NULL
+  sigma.offset <- NULL
+  nu.offset <- NULL
+  tau.offset <- NULL
   
   if(at.least.one.study.data.error==0){
     mod.gamlss.ds <- study.summary.0[[1]]$mod.gamlss.ds
@@ -361,44 +373,32 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
         tau.num.par.gamma <- c(tau.num.par.gamma, dim(mod.gamlss.ds$tau.coefSmo[[s]]$coef)[1])
       }
     }
+    
+    for(ss in 1:numstudies){
+      # overall minimum and maximum (anonymized) for the smoother variables
+      # Note that the minimum and maximum are needed to use the same knots on all servers
+      smoother.xmin <- pmin(smoother.xmin, study.summary.0[[ss]]$smoother.xmin)  # pairwise minimum (for each variable)
+      smoother.xmax <- pmax(smoother.xmax, study.summary.0[[ss]]$smoother.xmax)  # pairwise minimum (for each variable)
+      
+      # weights
+      weights <- c(weights, study.summary.0[[ss]]$mod.gamlss.ds$weights)
+      
+      # deviance
+      G.dev <- c(G.dev, study.summary.0[[ss]]$G.dev)
+      
+      # sample size
+      N <- sum(N, study.summary.0[[ss]]$mod.gamlss.ds$N)
+      noObs <- sum(noObs, study.summary.0[[ss]]$mod.gamlss.ds$noObs)
+      
+      # offset
+      mu.offset <- c(mu.offset, study.summary.0[[ss]]$mod.gamlss.ds$mu.offset)
+      sigma.offset <- c(sigma.offset, study.summary.0[[ss]]$mod.gamlss.ds$sigma.offset)
+      nu.offset <- c(nu.offset, study.summary.0[[ss]]$mod.gamlss.ds$nu.offset)
+      tau.offset <- c(tau.offset, study.summary.0[[ss]]$mod.gamlss.ds$tau.offset)
+    }  
   }
-  y.invalid <- NULL
-  mu.par.invalid <- NULL
-  sigma.par.invalid <- NULL
-  nu.par.invalid <- NULL
-  tau.par.invalid <- NULL
-  gamlss.saturation.invalid <- NULL
-  errorMessage <- NULL
-  weights <- NULL
-  N <- NULL
-  noObs <- NULL
-  mu.offset <- NULL
-  sigma.offset <- NULL
-  nu.offset <- NULL
-  tau.offset <- NULL
   
   for(ss in 1:numstudies){
-    # overall minimum and maximum (anonymized) for the smoother variables
-    # Note that the minimum and maximum are needed to use the same knots on all servers
-    smoother.xmin <- pmin(smoother.xmin, study.summary.0[[ss]]$smoother.xmin)  # pairwise minimum (for each variable)
-    smoother.xmax <- pmax(smoother.xmax, study.summary.0[[ss]]$smoother.xmax)  # pairwise minimum (for each variable)
-    
-    # weights
-    weights <- c(weights, study.summary.0[[ss]]$mod.gamlss.ds$weights)
-    
-    # deviance
-    G.dev <- c(G.dev, study.summary.0[[ss]]$G.dev)
-    
-    # sample size
-    N <- sum(N, study.summary.0[[ss]]$mod.gamlss.ds$N)
-    noObs <- sum(noObs, study.summary.0[[ss]]$mod.gamlss.ds$noObs)
-    
-    # offset
-    mu.offset <- c(mu.offset, study.summary.0[[ss]]$mod.gamlss.ds$mu.offset)
-    sigma.offset <- c(sigma.offset, study.summary.0[[ss]]$mod.gamlss.ds$sigma.offset)
-    nu.offset <- c(nu.offset, study.summary.0[[ss]]$mod.gamlss.ds$nu.offset)
-    tau.offset <- c(tau.offset, study.summary.0[[ss]]$mod.gamlss.ds$tau.offset)
-    
     # disclosure risk
     y.invalid <- c(y.invalid, study.summary.0[[ss]]$y.invalid)
     mu.par.invalid <- rbind(mu.par.invalid, study.summary.0[[ss]]$mu.par.invalid)
@@ -408,27 +408,6 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     gamlss.saturation.invalid <- c(gamlss.saturation.invalid, study.summary.0[[ss]]$gamlss.saturation.invalid)
     errorMessage <- c(errorMessage, study.summary.0[[ss]]$errorMessage)
   }
-  
-  # assign to gamlss model
-  mod.gamlss.ds$weights <- weights
-  if("mu" %in% names(family$parameters)){
-    mod.gamlss.ds$mu.formula <- formula
-    mod.gamlss.ds$mu.offset <- mu.offset
-  }
-  if("sigma" %in% names(family$parameters)){
-    mod.gamlss.ds$sigma.formula <- sigma.formula
-    mod.gamlss.ds$sigma.offset <- sigma.offset
-  }
-  if("nu" %in% names(family$parameters)){
-    mod.gamlss.ds$nu.formula <- nu.formula
-    mod.gamlss.ds$nu.offset <- nu.offset
-  }
-  if("tau" %in% names(family$parameters)){
-    mod.gamlss.ds$tau.formula <- tau.formula
-    mod.gamlss.ds$tau.offset <- tau.offset
-  }
-  # the dataname is added for later prediction
-  mod.gamlss.ds$dataname <- data
   
   y.invalid <- as.matrix(y.invalid)
   sum.y.invalid <- sum(y.invalid)
@@ -485,10 +464,6 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     print(as.matrix(errorMessage))
     
     return(list(
-      output.blocked.information.1,
-      output.blocked.information.2,
-      output.blocked.information.3,
-      output.blocked.information.4,
       y.vector.error = y.invalid,
       mu.x.matrix.error = mu.par.invalid,
       sigma.x.matrix.error = sigma.par.invalid,
@@ -499,6 +474,27 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     ))
     stop("DATA ERROR")
   }
+  
+  # assign to gamlss model
+  mod.gamlss.ds$weights <- weights
+  if("mu" %in% names(family$parameters)){
+    mod.gamlss.ds$mu.formula <- formula
+    mod.gamlss.ds$mu.offset <- mu.offset
+  }
+  if("sigma" %in% names(family$parameters)){
+    mod.gamlss.ds$sigma.formula <- sigma.formula
+    mod.gamlss.ds$sigma.offset <- sigma.offset
+  }
+  if("nu" %in% names(family$parameters)){
+    mod.gamlss.ds$nu.formula <- nu.formula
+    mod.gamlss.ds$nu.offset <- nu.offset
+  }
+  if("tau" %in% names(family$parameters)){
+    mod.gamlss.ds$tau.formula <- tau.formula
+    mod.gamlss.ds$tau.offset <- tau.offset
+  }
+  # the dataname is added for later prediction
+  mod.gamlss.ds$dataname <- data
   
   #**************************************************************************
   # III) Initialization ----

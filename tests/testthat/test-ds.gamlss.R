@@ -33,6 +33,59 @@ test_that("input_errors", {
 disconnect.studies.dataset.gamlss()
 
 
+# Test-discctrl-ds.gamlss ################################################
+
+#
+# Set up
+#
+
+connect.studies.dataset.gamlss(list("e3_bw", "e3_gac_None"))
+
+#
+# Tests
+#
+
+test_that("discctrl_gamlss", {
+  expect_message(ds.gamlss(formula = D_red$e3_bw ~ pb(D_red$e3_gac_None), 
+                         sigma.formula = D_red$e3_bw ~ pb(D_red$e3_gac_None),
+                         nu.formula = D_red$e3_bw ~ pb(D_red$e3_gac_None),
+                         tau.formula = D_red$e3_bw ~ pb(D_red$e3_gac_None),
+                         data = "D_red", 
+                         family = "BCPE()"), 
+               "MODEL FITTING TERMINATED AT FIRST ITERATION:")
+  
+  #check output with suppress messages
+  model_e3_bw.DS <- suppressMessages(ds.gamlss(formula = D_red$e3_bw ~ pb(D_red$e3_gac_None), 
+                                               sigma.formula = D_red$e3_bw ~ pb(D_red$e3_gac_None),
+                                               nu.formula = D_red$e3_bw ~ pb(D_red$e3_gac_None),
+                                               tau.formula = D_red$e3_bw ~ pb(D_red$e3_gac_None),
+                                               data = "D_red", 
+                                               family = "BCPE()"))
+  expect_length(model_e3_bw.DS, 7)
+  expect_equal(model_e3_bw.DS$y.vector.error, 
+               matrix(c(0,0,0), dimnames=list(c("server1", "server2", "server3"), c("Y VECTOR"))))
+  expect_equal(model_e3_bw.DS$mu.x.matrix.error, 
+               matrix(rep(0, times=6), ncol=2, dimnames = list(c("server1", "server2", "server3"))))
+  expect_equal(model_e3_bw.DS$sigma.x.matrix.error, 
+               matrix(rep(0, times=6), ncol=2, dimnames = list(c("server1", "server2", "server3"))))
+  expect_equal(model_e3_bw.DS$nu.x.matrix.error, 
+               matrix(rep(0, times=6), ncol=2, dimnames = list(c("server1", "server2", "server3"))))
+  expect_equal(model_e3_bw.DS$tau.x.matrix.error, 
+               matrix(rep(0, times=6), ncol=2, dimnames = list(c("server1", "server2", "server3"))))
+  expect_equal(model_e3_bw.DS$gamlss.overparameterized, 
+               matrix(c(1,1,1), dimnames=list(c("server1", "server2", "server3"), c("MODEL OVERPARAMETERIZED"))))
+  expect_equal(model_e3_bw.DS$errorMessage, 
+               matrix(rep("Study data or applied model invalid for this source", times=3), 
+                      dimnames=list(c("server1", "server2", "server3"), c("ERROR MESSAGES"))))
+})
+
+#
+# Done
+#
+
+disconnect.studies.dataset.gamlss()
+
+
 # Test-smk-ds.gamlss ################################################
 
 #
@@ -101,7 +154,7 @@ test_that("output_parametric_gamlss_normal_dist", {
   expect_equal(model_e3_bw.DS$P.deviance, model_e3_bw$P.deviance, tolerance=1e-07)
   expect_equal(model_e3_bw.DS$aic, model_e3_bw$aic, tolerance=1e-07)
   expect_equal(model_e3_bw.DS$sbc, model_e3_bw$sbc, tolerance=1e-07)
-  expect_equal(DSI::datashield.symbols(conns=ds.test_env$connections)[[1]], "D")
+  expect_equal(DSI::datashield.symbols(conns=ds.test_env$connections)[[1]], c("D", "D_red"))
 })
 
 
@@ -200,7 +253,7 @@ test_that("output_parametric_gamlss_bcpe_dist", {
   expect_equal(model_e3_bw.DS$P.deviance, model_e3_bw$P.deviance, tolerance=1e-07)
   expect_equal(model_e3_bw.DS$aic, model_e3_bw$aic, tolerance=1e-07)
   expect_equal(model_e3_bw.DS$sbc, model_e3_bw$sbc, tolerance=1e-07)
-  expect_equal(DSI::datashield.symbols(conns=ds.test_env$connections)[[1]], "D")
+  expect_equal(DSI::datashield.symbols(conns=ds.test_env$connections)[[1]], c("D", "D_red"))
 })
 
 test_that("output_pb_gamlss_bcpe_dist", {
@@ -212,9 +265,9 @@ test_that("output_pb_gamlss_bcpe_dist", {
                               max.values = max(ds.test_env$local.values$e3_gac_None), 
                               min.max.names = "e3_gac_None",
                               data = 'D', family = 'BCPE()')
-  pb <- getFromNamespace("pb", "gamlss")
-  gamlss.control <- getFromNamespace("gamlss.control", "gamlss")
-  glim.control <- getFromNamespace("glim.control", "gamlss")
+  pb <- utils::getFromNamespace("pb", "gamlss")
+  gamlss.control <- utils::getFromNamespace("gamlss.control", "gamlss")
+  glim.control <- utils::getFromNamespace("glim.control", "gamlss")
   model_e3_bw <- gamlss::gamlss(formula = e3_bw ~ pb(e3_gac_None),
                                 sigma.formula = e3_bw ~ pb(e3_gac_None),
                                 nu.formula = e3_bw ~ pb(e3_gac_None),
@@ -347,7 +400,7 @@ test_that("output_pb_gamlss_bcpe_dist", {
   expect_equal(model_e3_bw.DS$P.deviance, model_e3_bw$P.deviance, tolerance=1e-03)
   expect_equal(model_e3_bw.DS$aic, model_e3_bw$aic, tolerance=1e-03)
   expect_equal(model_e3_bw.DS$sbc, model_e3_bw$sbc, tolerance=1e-03)
-  expect_equal(DSI::datashield.symbols(conns=ds.test_env$connections)[[1]], "D")
+  expect_equal(DSI::datashield.symbols(conns=ds.test_env$connections)[[1]], c("D", "D_red"))
 })
 
 #
