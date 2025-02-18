@@ -1,14 +1,14 @@
 #'
 #' @title Generalized Additive Models for Location Scale and Shape
 #' @description Fits a generalized additive model for location, scale and shape (GAMLSS)
-#' on data from a single source or multiple sources on the server side. 
+#' using DataSHIELD on data from a single source or multiple sources on the server side. 
 #' @details Fits a generalized additive model for location, scale and shape (GAMLSS)
-#' on data from a single source or multiple sources on the server side. In the latter
+#' using DataSHIELD on data from a single source or multiple sources on the server side. In the latter
 #' case, the data are co-analysed (when using \code{ds.gamlss})  by using an approach 
 #' that is mathematically equivalent to placing all individual-level data from all sources
 #' in one central warehouse and analysing those data using the conventional 
-#' \code{gamlss()} function in R. For additional details see the help header of gamlss
-#' functions in native R \code{\link[gamlss]{gamlss}} package.
+#' \code{\link[gamlss]{gamlss}} function in R. For additional details please see the header of the
+#'  \code{\link[gamlss]{gamlss}} function.
 #' 
 #' Server functions called: \code{gamlssDS1}, 
 #'                          \code{gamlssDS2},
@@ -139,6 +139,7 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   sigma.formulatext <- Reduce(paste, deparse(sigma.formula))
   nu.formulatext <- Reduce(paste, deparse(nu.formula))
   tau.formulatext <- Reduce(paste, deparse(tau.formula))
+  outcome <- strsplit(formulatext, "~", fixed=TRUE)[[1]][1]
   
   # check that 'family' was set
   if(is.null(family)){
@@ -148,8 +149,15 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     stop("Argument 'family' must be either 'NO()', 'NO2()', 'BCCG()' or 'BCPE()'", call.=FALSE)
   }
   
-  # if the argument 'data' is set, check that the data frame is defined (i.e. exists) on the server site
+  # if the argument 'data' is not set try to extract it from outcome
+  if(is.null(data)){
+    holder <- extract(outcome)$holders
+    if(!is.na(holder)){
+      data <- holder
+    }
+  }
   if(!(is.null(data))){
+    # check that the data frame is defined (i.e. exists) on the server site
     defined <- isDefined(datasources, data)
   }
   
@@ -271,7 +279,9 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   ## Get global mean & sd for outcome
   # (necessary for initialization of distribution parameters on the server side
   # for certain families)
-  outcome <- strsplit(formulatext, "~", fixed=TRUE)[[1]][1]
+  if (!grepl("\\$", outcome, perl=TRUE) & !is.null(data)){
+    outcome <- paste0(data, "$", outcome)
+  }
   # global mean (required by most distributions)
   global.mean <- getPooledMean(datasources, outcome)
   if (familytext=="NO()" | familytext=="NO2()" | familytext=="NO" | familytext=="NO2"){
@@ -572,10 +582,11 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   
   # Left & right boundary for the knots for the pb.smoother variables
   if (!is.null(min.max.names)){
-    if (length(grep("$", min.max.names, fixed=TRUE))==0){
-      min.max.names <- paste(data, min.max.names, sep="$")
-    }
     position <- match(smoother.names, min.max.names)
+    if (is.na(position)){
+      #try whether smoother includes data$ prefix
+      position <- match(smoother.names, paste0(data, "$", min.max.names))
+    }
   }
   if (!is.null(min.values)){
     smoother.xmin[position] <- min.values
