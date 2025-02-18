@@ -17,7 +17,9 @@ setupGAMLSSTest <- function(packages=c(), env=parent.frame())
   load(testthat::test_path("data_files", "GAMLSS", paste(datasets[2], ".rda", sep="")), envir=env)
   load(testthat::test_path("data_files", "GAMLSS", paste(datasets[3], ".rda", sep="")), envir=env)
   load(testthat::test_path("data_files", "GAMLSS", paste(logindata, ".rda", sep="")), envir=env)
-  assign("gamlss_red", env$gamlss1[1:20, ], envir = env)
+  gamlss_red <- env$gamlss1[1:20, ]
+  gamlss_red$na_var <- NA
+  assign("gamlss_red", gamlss_red, envir = env)
   
   # new DSLiteServer, hosting the simulated test datasets
   tables <- list()
