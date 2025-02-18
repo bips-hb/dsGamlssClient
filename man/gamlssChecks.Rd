@@ -33,7 +33,7 @@ an integer 0 if check was passed and 1 if failed
 }
 \description{
 This is an internal function required by the client function \code{\link{ds.gamlss}}
-to verify all the variables and ensure the process does not halt inadvertanly.
+to verify all the variables and ensure the process does not halt inadvertently.
 }
 \details{
 the variables are checked to ensure they are defined, not empty (i.e. are not missing

@@ -1,6 +1,6 @@
 #' 
 #' @title Splits character by '$' and returns the single characters
-#' @description This is an internal function.
+#' @description This is an internal function based on the internal \code{\link[dsBaseClient]{extract}} function from \code{dsBaseClient} (version 6.3.0).
 #' @details Not required
 #' @param input a vector or a list of characters
 #' @keywords internal

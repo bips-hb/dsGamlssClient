@@ -1,21 +1,21 @@
 #'
 #' @title Gets a pooled statistical mean
-#' @description This is an internal function.
+#' @description This is an internal function based on the internal \code{\link[dsBaseClient]{getPooledMean}} function from \code{dsBaseClient} (version 6.3.0).
 #' @details This function is called to avoid calling the client function 'ds.mean'
 #' which may stop the process due to some checks not required when computing a mean inside
 #' a function.
-#' @param dtsources a list of \code{\link[DSI]{DSConnection-class}} objects obtained after login. If the <datasources>
+#' @param datasources a list of \code{\link[DSI]{DSConnection-class}} objects obtained after login. If the <datasources>
 #' the default set of connections will be used: see \link[DSI]{datashield.connections_default}.
 #' @param x a character, the name of a numeric vector
 #' @keywords internal
 #' @return a pooled mean
 #'
-getPooledMean <- function(dtsources, x){
+getPooledMean <- function(datasources, x){
   
-  num.sources <- length(dtsources)
+  num.sources <- length(datasources)
   
   cally <- paste0("meanDS(", x, ")")
-  out.mean <- DSI::datashield.aggregate(dtsources, as.symbol(cally))
+  out.mean <- DSI::datashield.aggregate(datasources, as.symbol(cally))
   
   length.total <- 0
   sum.weighted <- 0

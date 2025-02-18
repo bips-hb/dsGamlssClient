@@ -4,10 +4,10 @@
 \alias{getPooledMean}
 \title{Gets a pooled statistical mean}
 \usage{
-getPooledMean(dtsources, x)
+getPooledMean(datasources, x)
 }
 \arguments{
-\item{dtsources}{a list of \code{\link[DSI]{DSConnection-class}} objects obtained after login. If the <datasources>
+\item{datasources}{a list of \code{\link[DSI]{DSConnection-class}} objects obtained after login. If the <datasources>
 the default set of connections will be used: see \link[DSI]{datashield.connections_default}.}
 
 \item{x}{a character, the name of a numeric vector}
@@ -16,7 +16,7 @@ the default set of connections will be used: see \link[DSI]{datashield.connectio
 a pooled mean
 }
 \description{
-This is an internal function.
+This is an internal function based on the internal \code{\link[dsBaseClient]{getPooledMean}} function from \code{dsBaseClient} (version 6.3.0).
 }
 \details{
 This function is called to avoid calling the client function 'ds.mean'

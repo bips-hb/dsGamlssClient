@@ -1,6 +1,6 @@
 #'
 #' @title Checks if the objects are defined in all studies
-#' @description This is an internal function.
+#' @description This is an internal function based on the internal \code{\link[dsBaseClient]{isDefined}} function from \code{dsBaseClient} (version 6.3.0).
 #' @details In DataSHIELD an object included in analysis must be defined (i.e. exists)
 #' in all the studies. If not the process should halt.
 #' @param datasources a list of \code{\link[DSI]{DSConnection-class}} objects obtained after login. 

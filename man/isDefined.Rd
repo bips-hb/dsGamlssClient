@@ -23,7 +23,7 @@ and if the input object is not defined in one or more studies, or a Boolean valu
 \code{error.message} argument is set to FALSE.
 }
 \description{
-This is an internal function.
+This is an internal function based on the internal \code{\link[dsBaseClient]{isDefined}} function from \code{dsBaseClient} (version 6.3.0).
 }
 \details{
 In DataSHIELD an object included in analysis must be defined (i.e. exists)
