@@ -1,7 +1,7 @@
 #'
 #' @title Checks if the elements in the gamlss model have the right characteristics
 #' @description This is an internal function required by the client function \code{\link{ds.gamlss}}
-#' to verify all the variables and ensure the process does not halt inadvertanly.
+#' to verify all the variables and ensure the process does not halt inadvertently.
 #' @details the variables are checked to ensure they are defined, not empty (i.e. are not missing
 #' at complete).
 #' @param formula a character, a regression formula given as a string character
@@ -40,52 +40,42 @@ gamlssChecks <- function(formula, sigma.formula, nu.formula, tau.formula, data, 
   formulas <- gsub("/", "|", formulas, fixed=TRUE)
   formulas <- gsub(":", "|", formulas, fixed=TRUE)
   formulas <- gsub("||", "|", formulas, fixed=TRUE)
-  
+
   # split the input formulas by "|" to obtain the names of the variables
   elts <- unlist(strsplit(formulas, split="|", fixed=TRUE))
+  elts <- elts[which(nchar(elts)>0)]
   elts <- unique(elts)
   
-  # check that each variable is defined and not empty and each study. Stop the process if any check fails
+  # check that each variable is defined and not empty and each study. 
+  # Stop the process if any check fails
+  # the check for the dataframe was already included in ds.gamlss
   stdnames <- names(datasources)
-  for(i in 1:length(elts)){
-    if(is.na(as.numeric(elts[i], options(warn=-1)))){ # making sure an eventual intercept term is not included in the checks
-      message(paste0("    ", elts[i], "..."))
-      for(j in 1: length(datasources)){
-        # check if the variable is defined on the server site
-        myterms <- unlist(strsplit(elts[i], split='$', fixed=TRUE))
-        if(length(myterms) == 1){
-          cally <- call("exists", myterms[1])
-          out <- DSI::datashield.aggregate(datasources[j], cally)
-          if(!(out[[1]])){
-            stop(paste0("'", myterms[1], "' is not defined in ", stdnames[j], "!"), call.=FALSE)
-          }else{
-            cally <- call("colnamesDS", myterms[1])
-            clnames <- unlist(DSI::datashield.aggregate(datasources[j], cally))
-            if(!(myterms[2] %in% clnames)){
-              stop(paste0("'", myterms[2], "' is not defined in ", stdnames[j], "!"), call.=FALSE)
-            }else{
-              call0 <- paste0("isNaDS(", elts[i], ")")
-            }
+  if (length(elts)>0){
+    extractobj <- extract(elts)
+    for (i in 1:length(extractobj)){
+      holder <- extractobj$holders[i]
+      element <- extractobj$elements[i]
+      # check that the holder exists on each server
+      if (is.na(holder)){
+        holder <- data
+      }
+      if (is.null(holder)){
+        stop(paste0("No data.frame for the column ", element, " given. Specify it explicitly as dataname$", element, " or provide a valid data argument."))
+      }
+      isDefined(datasources, holder)
+      for (j in 1:length(datasources)){
+        # check that the holder has the respective element as a column on each server
+        cally <- call("colnamesDS", holder)
+        colnames <- unlist(DSI::datashield.aggregate(datasources[j], cally))
+        if(!(element %in% colnames)){
+          stop(paste0("'", element, "' is not defined in ", stdnames[j], "!"), call.=FALSE)
+        } else {
+          # check that the element is not missing completely (only has NA values)
+          call0 <- paste0("isNaDS(", holder, "$", element, ")")
+          out1 <- DSI::datashield.aggregate(datasources[j], as.symbol(call0))
+          if(out1[[1]]){
+            stop("The variable ", elts[i], " in ", stdnames[j], " is missing at complete (all values are 'NA').", call.=FALSE)
           }
-        }else{
-          if(!(is.null(data))){
-            cally <- call("colnamesDS", data)
-            clnames <- unlist(DSI::datashield.aggregate(datasources[j], cally))
-            if(!(elts[i] %in% clnames)){
-              dd <- isDefined(datasources, elts[i])
-              call0 <- paste0("isNaDS(", elts[i], ")")
-            }else{
-              call0 <- paste0("isNaDS(", paste0(data, "$", elts[i]), ")")
-            }
-          }else{
-            defined <- isDefined(datasources, elts[i])
-            call0 <- paste0("isNaDS(", elts[i], ")")
-          }
-        }
-        # check if variable is not missing at complete
-        out1 <- DSI::datashield.aggregate(datasources[j], as.symbol(call0))
-        if(out1[[1]]){
-          stop("The variable ", elts[i], " in ", stdnames[j], " is missing at complete (all values are 'NA').", call.=FALSE)
         }
       }
     }
