@@ -3,7 +3,7 @@ Maintainer: Annika swenne <swenne@leibniz-bips>
 Author: Annika Swenne <swenne@leibniz-bips>
 Version: 1.0.0
 License: GPL (>= 3) + file LICENSE
-Title: DataSHIELD client side functions for GAMLSS
+Title: DataSHIELD client side functions for Generalized Additive Models for Location, Scale and Shape
 Description: DataSHIELD client side functions to fit Generalized Additive Models for Location, Scale and Shape.
 RoxygenNote: 7.3.2
 Encoding: UTF-8
@@ -19,3 +19,5 @@ Imports:
     DSI,
     gamlss.dist,
     methods
+URL: https://github.com/bips-hb/dsGamlssClient
+BugReports: https://github.com/bips-hb/dsGamlssClient/issues
