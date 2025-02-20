@@ -1,8 +1,8 @@
 #'
-#' @title Generalized Additive Models for Location Scale and Shape
-#' @description Fits a generalized additive model for location, scale and shape (GAMLSS)
+#' @title Generalized Additive Models for Location Scale and Shape using DataSHIELD
+#' @description Fits a Generalized Additive Model for Location, Scale and shape (GAMLSS)
 #' using DataSHIELD on data from a single source or multiple sources on the server side. 
-#' @details Fits a generalized additive model for location, scale and shape (GAMLSS)
+#' @details Fits a Generalized Additive model for Location, scale and shape (GAMLSS)
 #' using DataSHIELD on data from a single source or multiple sources on the server side. In the latter
 #' case, the data are co-analysed (when using \code{ds.gamlss})  by using an approach 
 #' that is mathematically equivalent to placing all individual-level data from all sources
@@ -17,68 +17,90 @@
 #'                          \code{gamlssDS5},
 #'                          \code{gamlssDS6}
 #' 
-#' @param formula a formula object, with the response on the left of an ~ operator, 
-#' and the terms, separated by + operators, on the right. Currently, only penalised 
-#' beta splines, indicated by \code{pb()}, are supported for nonparametric smoothing, 
-#' e.g. \code{'y~pb(x,df=5)+x1+x2*x3'}. 
-#' @param sigma.formula a formula object for fitting a model to the sigma parameter,
-#' as in the formula above, e.g. \code{sigma.formula='~pb(x,df=5)'}.
-#' @param nu.formula a formula object for fitting a model to the nu parameter, 
-#' e.g. \code{nu.formula='~x'}.
-#' @param tau.formula a formula object for fitting a model to the tau parameter, 
-#' e.g. \code{tau.formula='~pb(x,df=2)'}.
-#' @param family a string, specifying the gamlss.family for model fitting, 
-#' which is used to define the distribution and the link functions of the various parameters. 
-#' Currently, the following families are supported: \code{family=c('NO()', 'NO2()', 'BCCG()', 'BCPE()')}. 
+#' @param formula A formula object, specifying the model for the mu distribution parameter. The response
+#' is on the left of an ~ operator, and the terms, separated by + operators, are on the right. Currently, only 
+#' penalized beta splines, indicated by \code{pb()}, are supported for nonparametric smoothing, 
+#' e.g. \code{y~pb(x1)+x2+x2*x3}. 
+#' @param sigma.formula A formula object, specifying the model for the sigma distribution parameter, as in \code{formula}.
+#' The only difference is, that it is not necessary to specify the response variable, e.g. \code{sigma.formula=~pb(x)}.
+#' @param nu.formula A formula object, specifying the model for the nu distribution parameter, as in \code{formula}.
+#' The only difference is, that it is not necessary to specify the response variable, e.g. \code{nu.formula=~pb(x)}.
+#' @param tau.formula A formula object, specifying the model for the tau distribution parameter, as in \code{formula}.
+#' The only difference is, that it is not necessary to specify the response variable, e.g. \code{tau.formula=~pb(x)}.
+#' @param family A string, specifying the distribution of the response variable and the link functions
+#' of the distribution parameters. Currently, the following families are supported: \code{family=c('NO()', 'NO2()', 'BCCG()', 'BCPE()')}. 
 #' Details on the distributions can be found in \code{\link[gamlss.dist]{gamlss.family}}. 
 #' Default \code{family='NO()'}.
-#' @param data a data frame containing the variables occurring in the formula. 
-#' If this is missing, the variables should be on the parent environment.
-#' @param min.values numeric vector. Allows to specify minimum values for the covariates
-#' which are used to determine the knots for \code{pb()}. If \code{NULL} an anonymized (noisy)
-#' minimum is used instead. Default \code{min.values=NULL}.
-#' @param max.values numeric vector. Allows to specify maximum values for the covariates
-#' which are used to determine the knots for \code{pb()}. If NULL an anonymized (noisy)
-#' maximum is used instead. Default \code{max.values=NULL}.
-#' @param min.max.names a character vector giving the names for the minimum and
-#' maximum values. Only required if \code{min.values} or \code{max.values} are given. 
-#' Default \code{min.max.names=NULL}.
-#' @param checks logical. If \code{checks=TRUE} \code{ds.gamlss} checks the structural integrity 
-#' of the model. Default \code{checks=FALSE}.
-#' @param mu.fix logical, indicating whether the mu parameter should be kept fixed
-#' in the fitting processes. Default \code{mu.fix=FALSE}.
-#' @param sigma.fix logical, indicating whether the sigma parameter should be kept
-#' fixed in the fitting processes. Default \code{sigma.fix=FALSE}.
-#' @param nu.fix logical, indicating whether the nu parameter should be kept fixed 
-#' in the fitting processes. Default \code{nu.fix=FALSE}.
-#' @param tau.fix logical, indicating whether the tau parameter should be kept fixed
-#' in the fitting processes. Default \code{tau.fix=FALSE}.
-#' @param control this sets the control parameters of the outer iterations algorithm 
-#' using the gamlss.control function. This is a vector of 7 numeric values: (i) c.crit 
+#' @param data A string, specifying the name of an (optional) data frame on the server-side containing the variables occurring in the formulas.
+#' If this is missing, the variables should be on the parent environment on the server-side or referenced explicitly as \code{dataname$varname}.
+#' @param min.values A numeric vector specifying minimum values for the covariates, which are used to determine the knots for \code{pb()}. 
+#' If \code{min.values=NULL} an anonymized (noisy) minimum is used instead to determine the knots on all servers. Default \code{min.values=NULL}.
+#' @param max.values A numeric vector specifying maximum values for the covariates, which are used to determine the knots for \code{pb()}. 
+#' If \code{max.values=NULL} an anonymized (noisy) maximum is used instead to determine the knots on all servers. Default \code{min.values=NULL}.
+#' @param min.max.names A string vector specifying the names for the minimum (\code{min.values}) and maximum values (\code{max.values}). 
+#' Only required if \code{min.values} or \code{max.values} are given. Default \code{min.max.names=NULL}.
+#' @param checks Logical, if \code{checks=TRUE} \code{ds.gamlss} checks whether the required variables for the model exist on each server and are 
+#' not completely missing. Default \code{checks=FALSE}.
+#' @param mu.fix Logical, indicating whether the mu distribution parameter should be kept fixed during the fitting processes. Default \code{mu.fix=FALSE}.
+#' @param sigma.fix Logical, indicating whether the sigma distribution parameter should be kept fixed during the fitting processes. Default \code{sigma.fix=FALSE}.
+#' @param nu.fix Logical, indicating whether the nu distribution parameter should be kept fixed during the fitting processes. Default \code{nu.fix=FALSE}.
+#' @param tau.fix Logical, indicating whether the tau distribution parameter should be kept fixed during the fitting processes. Default \code{tau.fix=FALSE}.
+#' @param control Numeric vector with seven elements that sets the control parameters of the outer iterations algorithm 
+#' using the \code{\link[gamlss]{gamlss.control}} function: (i) c.crit 
 #' (the convergence criterion for the algorithm), (ii) n.cyc (the number of cycles of 
-#' the algorithm), (iii) mu.step (the step length for the parameter mu), (iv) sigma.step 
-#' (the step length for the parameter sigma), (v) nu.step (the step length for the
-#' parameter nu), (vi) tau.step (the step length for the parameter tau), (vii) gd.tol
-#' (global deviance tolerance level). The default values for these 7 parameters are 
-#' set to \code{control=c(0.001, 20, 1, 1, 1, 1, Inf)}.
-#' @param i.control this sets the control parameters of the inner iterations of the 
-#' RS algorithm using the glim.control function. This is a vector of 4 numeric values: 
-#' (i) cc (the convergence criterion for the algorithm), (ii) cyc (the number of 
-#' cycles of the algorithm), (iii) bf.cyc (the number of cycles of the backfitting 
-#' algorithm), (iv) bf.tol (the convergence criterion (tolerance level) for the 
-#' backfitting algorithm). The default values for these 4 parameters are set to 
+#' the algorithm), (iii) mu.step (the step length for the distribution parameter mu), (iv) sigma.step 
+#' (the step length for the distribution parameter sigma), (v) nu.step (the step length for the
+#' distribution parameter nu), (vi) tau.step (the step length for the distribution parameter tau), 
+#' (vii) gd.tol (global deviance tolerance level). Default \code{control=c(0.001, 20, 1, 1, 1, 1, Inf)}.
+#' @param i.control Numeric vector with four elements that sets the control parameters of the inner iterations of the 
+#' RS algorithm using the \code{\link[gamlss]{glim.control}} function: (i) cc (the convergence criterion for the algorithm),
+#' (ii) cyc (the number of cycles of the algorithm), (iii) bf.cyc (the number of cycles of the backfitting 
+#' algorithm), (iv) bf.tol (the convergence criterion (tolerance level) for the backfitting algorithm). Default 
 #' \code{i.control=c(0.001, 50, 30, 0.001)}.
-#' @param autostep logical, indicating whether the steps should be halved automatically 
-#' if the new global deviance is greater than the old one. The default is \code{autostep=TRUE}.
-#' @param datasources  a list of \code{\link[DSI]{DSConnection-class}} 
+#' @param autostep Logical, indicating whether the steps should be halved automatically 
+#' if the new global deviance is greater than the old one. Default \code{autostep=TRUE}.
+#' @param datasources A list of \code{\link[DSI]{DSConnection-class}} 
 #' objects obtained after login. If the \code{datasources} argument is not specified
 #' the default set of connections will be used: see \code{\link[DSI]{datashield.connections_default}}.
-#' @return a gamlss object with all components as in the native R \code{\link[gamlss]{gamlss}} function. 
-#' Individual-level information like the components y (the response response) and 
-#' residuals (the normalised quantile residuals of the model) are not disclosed to 
+#' @return A ds.gamlss object with all components as in the \code{\link[gamlss]{gamlss}} function. 
+#' Individual-level information like the components \code{y} (the response) and 
+#' \code{residuals} (the normalised quantile residuals of the model) are not disclosed to 
 #' the client-side.
 #' @author Annika Swenne
 #' @export
+#' @examples
+#' library(DSLite)
+#' data(mtcars)
+#' 
+#' ## Set up DSLite server
+#' dslite.server1 <- newDSLiteServer(tables=list(data=mtcars[c(1:15),]), 
+#'   config = defaultDSConfiguration(include=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist")))
+#' dslite.server2 <- newDSLiteServer(tables=list(data=mtcars[c(16:nrow(mtcars)),]), 
+#'   config = defaultDSConfiguration(include=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist")))
+#' builder <- DSI::newDSLoginBuilder()
+#' builder$append(server = "study1", url="dslite.server1", table="data", driver="DSLiteDriver")
+#' builder$append(server = "study2", url="dslite.server2", table="data", driver="DSLiteDriver")
+#' logindata.dslite <- builder$build()
+#' # Login to the virtualized server
+#' conns <- DSI::datashield.login(logindata.dslite, assign=TRUE)
+#' DSI::datashield.assign.table(conns=conns, symbol="D", table=c("data", "data"))
+#' 
+#' ## Examples
+#' # Example 1: parametric model
+#' model1 <- ds.gamlss(formula = mpg ~ wt, sigma.formula = ~ disp, data = 'D', family = 'NO()')
+#' 
+#' # Example 2: penalized beta splines
+#' model2 <- ds.gamlss(formula = mpg ~ pb(wt), sigma.formula = ~ disp, data = 'D', family = 'NO()')
+#' 
+#' # Example 3: penalized beta splines with known minimum and maximum
+#' model3 <- ds.gamlss(formula = mpg ~ pb(wt), sigma.formula = ~ disp, 
+#'                     min.values = min(mtcars$wt), 
+#'                     max.values = max(mtcars$wt), 
+#'                     min.max.names = 'wt',
+#'                     data = 'D', family = 'NO()')
+#'                     
+#' ## Logout
+#' DSI::datashield.logout(conns)
 
 ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.formula = ~1,
                       family = 'NO()', data = NULL, min.values = NULL, max.values = NULL, 
@@ -100,15 +122,44 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
     lapply(l, function(obj) {obj[[field]]})
   }
   
+  # help function to convert formula and family string to legal transmission format for DataSHIELD
+  totransstring <- function(input_string){
+    trans_string <- gsub("(", "left_parenthesis", input_string, fixed = TRUE)
+    trans_string <- gsub(")", "right_parenthesis", trans_string, fixed = TRUE)
+    trans_string <- gsub("~", "tilde_symbol", trans_string, fixed = TRUE)
+    trans_string <- gsub("=", "equal_symbol", trans_string, fixed = TRUE)
+    trans_string <- gsub(",", "comma_symbol", trans_string, fixed = TRUE)
+    trans_string <- gsub("*", "asterisk_symbol", trans_string, fixed = TRUE)
+    trans_string <- gsub("^", "caret_symbol", trans_string, fixed = TRUE)
+    trans_string <- gsub(" ", "", trans_string, fixed = TRUE)
+    return(trans_string)
+  }
+  
   # help function to extract control parameters for pb smoother
   getpbcontrol <- function(args, pattern="pb.control"){
     if (length(grep(pattern="pb.control", args, fixed=TRUE))>0) {
       # control parameters specified
-      pb.control <- eval(parse(text=args[grep(pattern="pb.control", x=args, fixed=TRUE)]), envir=asNamespace("gamlss"))
+      text <- args[grep(pattern="pb.control", x=args, fixed=TRUE)]
+      text <- sub(".*(pb\\.control\\(.*\\))", "\\1", text)
+      pb.control <- eval(parse(text=paste(text)), envir=asNamespace("gamlss"))
     } else {
       # no control parameters specified - use default
       pb.control <- eval(parse(text="pb.control()"), envir=asNamespace("gamlss"))
     }
+  }
+  
+  # help function to modify pb.control in the formulas
+  modifypbcontrol <- function(input_string) {
+    # Case 1: If there's no control = pb.control(...), add it
+    if (!grepl("control\\s*=\\s*pb\\.control\\(", input_string)) {
+      return(gsub("pb\\(([^)]+)\\)", "pb(\\1, control=pb.control(inter=10))", input_string))
+    }
+    # Case 2: If pb.control already contains inter=, replace its value with inter=10
+    if (grepl("inter\\s*=", input_string)) {
+      return(gsub("inter\\s*=\\s*[0-9]+", "inter=10", input_string))
+    }
+    # Case 3: If control = pb.control(...) exists but doesn't contain inter=, add it
+    return(gsub("control\\s*=\\s*pb\\.control\\(([^)]*)\\)", "control=pb.control(\\1, inter=10)", input_string))
   }
   
   # look for DS connections
@@ -159,6 +210,32 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   if(!(is.null(data))){
     # check that the data frame is defined (i.e. exists) on the server site
     defined <- isDefined(datasources, data)
+    
+    ## change the number of equally spaced intervals for pb smoothers if model does not have large sample size
+    # get the total sample size
+    data.dim <- DSI::datashield.aggregate(datasources, call('dimDS', x="D"))
+    sample.size <- sum(sapply(data.dim, `[`, 1))
+    if (sample.size<99){
+      if (grepl("pb\\(", formulatext)){
+        formulatext <- modifypbcontrol(formulatext)
+        formula <- stats::as.formula(formulatext)
+      }
+      if (grepl("pb\\(", sigma.formulatext)){
+        sigma.formulatext <- modifypbcontrol(sigma.formulatext)
+        sigma.formula <- stats::as.formula(sigma.formulatext)
+      }
+      if (grepl("pb\\(", nu.formulatext)){
+        nu.formulatext <- modifypbcontrol(nu.formulatext)
+        nu.formula <- stats::as.formula(nu.formulatext)
+      }
+      if (grepl("pb\\(", tau.formulatext)){
+        tau.formulatext <- modifypbcontrol(tau.formulatext)
+        tau.formula <- stats::as.formula(tau.formulatext)
+      }
+    }
+  }
+  if (!grepl("\\$", outcome, perl=TRUE) & !is.null(data)){
+    outcome <- paste0(data, "$", outcome)
   }
   
   # check min.values and max.values
@@ -216,47 +293,11 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   ## Create strings for transfer to the server
   # special symbols (brackets, etc. cannot be transmitted to the server)
   # --> convert them to plain text and reconvert them back on the server side
-  formula.trans <- gsub("(", "left_parenthesis", formulatext, fixed = TRUE)
-  formula.trans <- gsub(")", "right_parenthesis", formula.trans, fixed = TRUE)
-  formula.trans <- gsub("~", "tilde_symbol", formula.trans, fixed = TRUE)
-  formula.trans <- gsub("=", "equal_symbol", formula.trans, fixed = TRUE)
-  formula.trans <- gsub(",", "comma_symbol", formula.trans, fixed = TRUE)
-  formula.trans <- gsub("*", "asterisk_symbol", formula.trans, fixed = TRUE)
-  formula.trans <- gsub("^", "caret_symbol", formula.trans, fixed = TRUE)
-  formula.trans <- gsub(" ", "", formula.trans, fixed = TRUE)
-  
-  sigma.formula.trans <- gsub("(", "left_parenthesis", sigma.formulatext, fixed = TRUE)
-  sigma.formula.trans <- gsub(")", "right_parenthesis", sigma.formula.trans, fixed = TRUE)
-  sigma.formula.trans <- gsub("~", "tilde_symbol", sigma.formula.trans, fixed = TRUE)
-  sigma.formula.trans <- gsub("=", "equal_symbol", sigma.formula.trans, fixed = TRUE)
-  sigma.formula.trans <- gsub(",", "comma_symbol", sigma.formula.trans, fixed = TRUE)
-  sigma.formula.trans <- gsub("*", "asterisk_symbol", sigma.formula.trans, fixed = TRUE)
-  sigma.formula.trans <- gsub("^", "caret_symbol", sigma.formula.trans, fixed = TRUE)
-  sigma.formula.trans <- gsub(" ", "", sigma.formula.trans, fixed = TRUE)
-  
-  nu.formula.trans <- gsub("(", "left_parenthesis", nu.formulatext, fixed = TRUE)
-  nu.formula.trans <- gsub(")", "right_parenthesis", nu.formula.trans, fixed = TRUE)
-  nu.formula.trans <- gsub("~", "tilde_symbol", nu.formula.trans, fixed = TRUE)
-  nu.formula.trans <- gsub("=", "equal_symbol", nu.formula.trans, fixed = TRUE)
-  nu.formula.trans <- gsub(",", "comma_symbol", nu.formula.trans, fixed = TRUE)
-  nu.formula.trans <- gsub("*", "asterisk_symbol", nu.formula.trans, fixed = TRUE)
-  nu.formula.trans <- gsub("^", "caret_symbol", nu.formula.trans, fixed = TRUE)
-  nu.formula.trans <- gsub(" ", "", nu.formula.trans, fixed = TRUE)
-  
-  tau.formula.trans <- gsub("(", "left_parenthesis", tau.formulatext, fixed = TRUE)
-  tau.formula.trans <- gsub(")", "right_parenthesis", tau.formula.trans, fixed = TRUE)
-  tau.formula.trans <- gsub("~", "tilde_symbol", tau.formula.trans, fixed = TRUE)
-  tau.formula.trans <- gsub("=", "equal_symbol", tau.formula.trans, fixed = TRUE)
-  tau.formula.trans <- gsub(",", "comma_symbol", tau.formula.trans, fixed = TRUE)
-  tau.formula.trans <- gsub("*", "asterisk_symbol", tau.formula.trans, fixed = TRUE)
-  tau.formula.trans <- gsub("^", "caret_symbol", tau.formula.trans, fixed = TRUE)
-  tau.formula.trans <- gsub(" ", "", tau.formula.trans, fixed = TRUE)
-  
-  family.trans <- gsub("(", "left_parenthesis", family, fixed = TRUE)
-  family.trans <- gsub(")", "right_parenthesis", family.trans, fixed = TRUE)
-  family.trans <- gsub("=", "equal_symbol", family.trans, fixed = TRUE)
-  family.trans <- gsub(",", "comma_symbol", family.trans, fixed = TRUE)
-  family.trans <- gsub(" ", "", family.trans, fixed = TRUE)
+  formula.trans <- totransstring(formulatext)
+  sigma.formula.trans <- totransstring(sigma.formulatext)
+  nu.formula.trans <- totransstring(nu.formulatext)
+  tau.formula.trans <- totransstring(tau.formulatext)
+  family.trans <- totransstring(family)
   familytext <- family
   family <- gamlss.dist::as.family(eval(parse(text=family), envir=asNamespace("gamlss.dist")))
 
@@ -279,9 +320,6 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   ## Get global mean & sd for outcome
   # (necessary for initialization of distribution parameters on the server side
   # for certain families)
-  if (!grepl("\\$", outcome, perl=TRUE) & !is.null(data)){
-    outcome <- paste0(data, "$", outcome)
-  }
   # global mean (required by most distributions)
   global.mean <- getPooledMean(datasources, outcome)
   if (familytext=="NO()" | familytext=="NO2()" | familytext=="NO" | familytext=="NO2"){
