@@ -32,7 +32,7 @@ DataSHIELD can be obtained from the DataSHIELD
 
 ## Installation
 
-You can install the development version of dsGamlssClient from
+You can install the development version of `dsGamlssClient` from
 [GitHub](https://github.com/) with:
 
 ``` r
