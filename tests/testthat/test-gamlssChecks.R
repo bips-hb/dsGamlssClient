@@ -51,13 +51,13 @@ test_that("output_gamlssChecks_noprefix_dataNULL", {
 })
 
 test_that("output_gamlssChecks_NA", {
-  expect_error(gamlssChecks(formula=stats::as.formula(D_red$e3_bw ~ pb(D_red$na_var)), 
+  expect_error(gamlssChecks(formula=stats::as.formula(e3_bw ~ pb(na_var)), 
                             sigma.formula=stats::as.formula(~1), 
                             nu.formula=stats::as.formula(~1), 
                             tau.formula=stats::as.formula(~1), 
-                            data='D_red', 
+                            data='D_na', 
                             datasources=ds.test_env$connections), 
-               "The variable D_red$na_var in server1 is missing at complete (all values are 'NA').", fixed=TRUE)
+               "The variable na_var in server2 is missing at complete (all values are 'NA').", fixed=TRUE)
 })
 
 #

@@ -1,6 +1,6 @@
 setupGAMLSSTest <- function(packages=c(), env=parent.frame())
 {
-  datasets <- c("gamlss1", "gamlss2", "gamlss3", "gamlss_red")
+  datasets <- c("gamlss1", "gamlss2", "gamlss3", "gamlss_red", "gamlss_na")
   logindata <- "logindata.dslite.gamlss"
   dslite.server <- "dslite.server"
 
@@ -18,8 +18,11 @@ setupGAMLSSTest <- function(packages=c(), env=parent.frame())
   load(testthat::test_path("data_files", "GAMLSS", paste(datasets[3], ".rda", sep="")), envir=env)
   load(testthat::test_path("data_files", "GAMLSS", paste(logindata, ".rda", sep="")), envir=env)
   gamlss_red <- env$gamlss1[1:20, ]
-  gamlss_red$na_var <- NA
+  gamlss_red$na_var <- 1
+  gamlss_na <- gamlss_red
+  gamlss_na$na_var <- NA
   assign("gamlss_red", gamlss_red, envir = env)
+  assign("gamlss_na", gamlss_na, envir = env)
   
   # new DSLiteServer, hosting the simulated test datasets
   tables <- list()
@@ -96,6 +99,8 @@ connect.studies.dataset.gamlss <- function(variables)
                                  list(server1="gamlss1", server2="gamlss2", server3="gamlss3"))
     DSI::datashield.assign.table(conns=ds.test_env$connections, symbol="D_red", 
                                  list(server1="gamlss_red", server2="gamlss_red", server3="gamlss_red"))
+    DSI::datashield.assign.table(conns=ds.test_env$connections, symbol="D_na", 
+                                 list(server1="gamlss_red", server2="gamlss_na", server3="gamlss_red"))
   }
   
 }
