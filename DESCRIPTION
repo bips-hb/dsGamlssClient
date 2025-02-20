@@ -1,23 +1,29 @@
 Package: dsGamlssClient
-Maintainer: Annika swenne <swenne@leibniz-bips>
-Author: Annika Swenne <swenne@leibniz-bips>
+Title: DataSHIELD client-side functions for Generalized Additive Models
+    for Location, Scale and Shape
 Version: 1.0.0
+Authors@R: 
+    person("Annika", "Swenne", , "swenne@leibniz-bips.de", role = c("aut", "cre"))
+Description: DataSHIELD client-side functions to fit Generalized Additive
+    Models for Location, Scale and Shape using DataSHIELD.  DataSHIELD is
+    a software infrastructure which allows you to do non-disclosive
+    federated analysis on sensitive data. Note that DataSHIELD has a
+    client-server infrastructure, so the dsGamlss package needs to be used
+    in conjunction with the dsGamlssClient package.
 License: GPL (>= 3) + file LICENSE
-Title: DataSHIELD client side functions for Generalized Additive Models for Location, Scale and Shape
-Description: DataSHIELD client side functions to fit Generalized Additive Models for Location, Scale and Shape.
-RoxygenNote: 7.3.2
-Encoding: UTF-8
-Suggests: 
-    testthat (>= 3.0.0),
-    DSOpal,
-    DSLite,
-    gamlss,
-    dsGamlss,
-    dsBase
-Config/testthat/edition: 3
+URL: https://github.com/bips-hb/dsGamlssClient
+BugReports: https://github.com/bips-hb/dsGamlssClient/issues
 Imports: 
     DSI,
     gamlss.dist,
     methods
-URL: https://github.com/bips-hb/dsGamlssClient
-BugReports: https://github.com/bips-hb/dsGamlssClient/issues
+Suggests: 
+    dsBase,
+    dsGamlss,
+    DSLite,
+    DSOpal,
+    gamlss,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Encoding: UTF-8
+RoxygenNote: 7.3.2
