@@ -22,5 +22,7 @@ opal <- opal.login('username','password', url='url', opts = list(ssl_verifyhost=
 upload_testing_dataset_table(opal, 'test_gamlss_project', 'gamlss1', testthat::test_path('data_files', 'GAMLSS', 'gamlss1.rda'))
 upload_testing_dataset_table(opal, 'test_gamlss_project', 'gamlss2', testthat::test_path('data_files', 'GAMLSS', 'gamlss2.rda'))
 upload_testing_dataset_table(opal, 'test_gamlss_project', 'gamlss3', testthat::test_path('data_files', 'GAMLSS', 'gamlss3.rda'))
+upload_testing_dataset_table(opal, 'test_gamlss_project', 'gamlss_red', testthat::test_path('data_files', 'GAMLSS', 'gamlss_red.rda'))
+upload_testing_dataset_table(opal, 'test_gamlss_project', 'gamlss_na', testthat::test_path('data_files', 'GAMLSS', 'gamlss_na.rda'))
 
 opal.logout(opal)
