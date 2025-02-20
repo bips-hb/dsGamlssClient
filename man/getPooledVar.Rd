@@ -2,25 +2,25 @@
 % Please edit documentation in R/getPooledVar.R
 \name{getPooledVar}
 \alias{getPooledVar}
-\title{Gets a pooled variance}
+\title{Gets a pooled variance from the servers}
 \usage{
 getPooledVar(datasources, x)
 }
 \arguments{
-\item{datasources}{a list of \code{\link[DSI]{DSConnection-class}} objects obtained after login. If the <datasources>
-the default set of connections will be used: see \link[DSI]{datashield.connections_default}.}
+\item{datasources}{A list of \code{\link[DSI]{DSConnection-class}} 
+objects obtained after login. If the \code{datasources} argument is not specified
+the default set of connections will be used: see \code{\link[DSI]{datashield.connections_default}}.}
 
-\item{x}{a character, the name of a numeric vector}
+\item{x}{A string with the name of a numeric vector for which the variance should be computed.}
 }
 \value{
-a pooled variance
+A numeric value, giving the pooled variance.
 }
 \description{
 This is an internal function based on the internal \code{\link[dsBaseClient]{getPooledVar}} function from \code{dsBaseClient} (version 6.3.0).
 }
 \details{
-This function is called to avoid calling the client function 'ds.var'
-which may stop the process due to some checks not required when computing a mean inside
-a function.
+This function is called to avoid calling the client function \code{\link[dsBaseClient]{ds.var}}
+which may stop the process due to some checks not required when computing a mean inside a function.
 }
 \keyword{internal}

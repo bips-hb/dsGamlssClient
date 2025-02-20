@@ -2,7 +2,7 @@
 % Please edit documentation in R/gamlssChecks.R
 \name{gamlssChecks}
 \alias{gamlssChecks}
-\title{Checks if the elements in the gamlss model have the right characteristics}
+\title{Check existence of variables in \code{ds.gamlss} model on each server}
 \usage{
 gamlssChecks(
   formula,
@@ -14,30 +14,38 @@ gamlssChecks(
 )
 }
 \arguments{
-\item{formula}{a character, a regression formula given as a string character}
+\item{formula}{A string, specifying the model for the mu distribution parameter. The response
+is on the left of an ~ operator, and the terms, separated by + operators, are on the right. Currently, only 
+penalized beta splines, indicated by \code{pb()}, are supported for nonparametric smoothing, 
+e.g. \code{'y~pb(x1)+x2+x2*x3'}.}
 
-\item{sigma.formula}{a character, a regression formula given as a string character}
+\item{sigma.formula}{A string, specifying the model for the sigma distribution parameter, as in \code{formula}.
+The only difference is, that it is not necessary to specify the response variable, e.g. \code{sigma.formula='~pb(x)'}.}
 
-\item{nu.formula}{a character, a regression formula given as a string character}
+\item{nu.formula}{A string, specifying the model for the nu distribution parameter, as in \code{formula}.
+The only difference is, that it is not necessary to specify the response variable, e.g. \code{nu.formula='~pb(x)'}.}
 
-\item{tau.formula}{a character, a regression formula given as a string character}
+\item{tau.formula}{A string, specifying the model for the tau distribution parameter, as in \code{formula}.
+The only difference is, that it is not necessary to specify the response variable, e.g. \code{tau.formula='~pb(x)'}.}
 
-\item{data}{a character, the name of an optional data frame containing the variables in
-in the \code{formula}.}
+\item{data}{A string, specifying the name of an (optional) data frame on the server-side containing the variables occurring in the formulas.
+If this is missing, the variables should be on the parent environment on the server-side or referenced explicitly as \code{dataname$varname}.}
 
-\item{datasources}{a list of \code{\link[DSI]{DSConnection-class}} objects obtained after login. If the <datasources>
-the default set of connections will be used: see \link[DSI]{datashield.connections_default}.}
+\item{datasources}{A list of \code{\link[DSI]{DSConnection-class}} 
+objects obtained after login. If the \code{datasources} argument is not specified
+the default set of connections will be used: see \code{\link[DSI]{datashield.connections_default}}.}
 }
 \value{
-an integer 0 if check was passed and 1 if failed
+An integer, 0 if check was passed and 1 if the tests failed
 }
 \description{
-This is an internal function required by the client function \code{\link{ds.gamlss}}
-to verify all the variables and ensure the process does not halt inadvertently.
+This is an internal function required by the client function \code{{ds.gamlss}}
+to verify that all variables specified in the formulas for the \code{ds.gamlss} model exist on the server and 
+to ensure the process does not halt inadvertently.
 }
 \details{
-the variables are checked to ensure they are defined, not empty (i.e. are not missing
-at complete).
+The variables in the formulas are checked to ensure they exist and are not empty, i.e., not missing
+completely.
 }
 \author{
 Annika Swenne

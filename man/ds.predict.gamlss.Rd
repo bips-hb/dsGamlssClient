@@ -2,33 +2,63 @@
 % Please edit documentation in R/ds.predict.gamlss.R
 \name{ds.predict.gamlss}
 \alias{ds.predict.gamlss}
-\title{Predictions for Generalized Additive Models for Location Scale and Shape}
+\title{Derive predictions for \code{ds.gamlss} objects}
 \usage{
 ds.predict.gamlss(object, newdata, what = "mu", type = "link")
 }
 \arguments{
-\item{object}{a DataSHIELD GAMLSS fitted model output by \code{ds.gamlss}.}
+\item{object}{A \code{ds.gamlss} object output by \code{\link[dsGamlssClient]{ds.gamlss}}.}
 
-\item{newdata}{a data frame containing new values for the explanatory variables used
-in the model.}
+\item{newdata}{A data frame containing new values for the explanatory variables that are used in the model.}
 
-\item{what}{distribution parameter that should be predicted. The default is 
-\code{what="mu"}.}
+\item{what}{A string, specifying the distribution parameter that should be predicted. Default \code{what="mu"}.}
 
-\item{type}{the default value \code{type="link"} gets the linear predictor for the 
-specified distribution parameter. \code{type="response"} gets the fitted values for
-the distribution parameter.}
+\item{type}{A string, specifying the kind of predictions that should be derived. The default value \code{type="link"} 
+predicts the linear predictor for the specified distribution parameter, whereas \code{type="response"} predicts the
+fitted values for the distribution parameter.}
 }
 \value{
-a vector with the predictions for \code{newdata}.
+A vector with the predictions for \code{newdata}.
 }
 \description{
-This is the \code{ds.gamlss} method which produces predictions for a new 
-data set for a specfied parameter from a \code{ds.gamlss} object.
+This function predicts the specified distribution parameter for a new data set from a
+\code{ds.gamlss} object that is output by the \code{\link[dsGamlssClient]{ds.gamlss}} function.
 }
 \details{
-The predict function assumes that the object given in \code{newdata} is a 
-data frame containing the right x-variables used in the model.
+The \code{ds.predict.gamlss} function assumes that the object given in \code{newdata} is a 
+data frame containing the explanatory variables that are used in the model.
+}
+\examples{
+library(DSLite)
+data(mtcars)
+
+## Create newdata for predictions
+newdata <- data.frame(wt = seq(2, 5, by=0.01))
+
+## Fit ds.gamlss model
+# Set up DSLite server
+dslite.server1 <- newDSLiteServer(tables=list(data=mtcars[c(1:15),]), 
+  config = defaultDSConfiguration(include=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist")))
+dslite.server2 <- newDSLiteServer(tables=list(data=mtcars[c(16:nrow(mtcars)),]), 
+  config = defaultDSConfiguration(include=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist")))
+builder <- DSI::newDSLoginBuilder()
+builder$append(server = "study1", url="dslite.server1", table="data", driver="DSLiteDriver")
+builder$append(server = "study2", url="dslite.server2", table="data", driver="DSLiteDriver")
+logindata.dslite <- builder$build()
+# Login to the virtualized server
+conns <- DSI::datashield.login(logindata.dslite, assign=TRUE)
+DSI::datashield.assign.table(conns=conns, symbol="D", table=c("data", "data"))
+# Fit model
+model <- ds.gamlss(formula = mpg ~ pb(wt), sigma.formula = ~ wt, data = 'D', family = 'NO()')
+# Logout
+DSI::datashield.logout(conns)
+
+## Examples
+# Example 1: Predict mu
+mu.response <- ds.predict.gamlss(model, newdata, what="mu", type="response")
+
+# Example 2: Predict linear predictor for sigma
+sigma.link <- ds.predict.gamlss(model, newdata, what="sigma", type="link")
 }
 \author{
 Annika Swenne

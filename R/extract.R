@@ -1,10 +1,14 @@
 #' 
-#' @title Splits character by '$' and returns the single characters
-#' @description This is an internal function based on the internal \code{\link[dsBaseClient]{extract}} function from \code{dsBaseClient} (version 6.3.0).
-#' @details Not required
-#' @param input a vector or a list of characters
+#' @title Split input string by '$'
+#' @description This is an internal function based on the internal \code{\link[dsBaseClient]{extract}} function from \code{dsBaseClient} (version 6.3.0). It splits
+#' the input by the '$' symbol and returns the single elements as a list.
+#' @param input A vector or a list of strings.
 #' @keywords internal
-#' @return a vector of characters
+#' @return a list with the following elements
+#' \describe{
+#' \item{\code{holders}}{The strings before the '$' symbol.}
+#' \item{\code{elements}}{The strings after the '$' symbol.}
+#' }
 #'
 extract <- function(input){
   input <- unlist(input)

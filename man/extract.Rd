@@ -2,20 +2,22 @@
 % Please edit documentation in R/extract.R
 \name{extract}
 \alias{extract}
-\title{Splits character by '$' and returns the single characters}
+\title{Split input string by '$'}
 \usage{
 extract(input)
 }
 \arguments{
-\item{input}{a vector or a list of characters}
+\item{input}{A vector or a list of strings.}
 }
 \value{
-a vector of characters
+a list with the following elements
+\describe{
+\item{\code{holders}}{The strings before the '$' symbol.}
+\item{\code{elements}}{The strings after the '$' symbol.}
+}
 }
 \description{
-This is an internal function based on the internal \code{\link[dsBaseClient]{extract}} function from \code{dsBaseClient} (version 6.3.0).
-}
-\details{
-Not required
+This is an internal function based on the internal \code{\link[dsBaseClient]{extract}} function from \code{dsBaseClient} (version 6.3.0). It splits
+the input by the '$' symbol and returns the single elements as a list.
 }
 \keyword{internal}
