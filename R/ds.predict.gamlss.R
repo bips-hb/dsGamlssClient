@@ -1,21 +1,49 @@
 #'
-#' @title Predictions for Generalized Additive Models for Location Scale and Shape
-#' @description This is the \code{ds.gamlss} method which produces predictions for a new 
-#' data set for a specfied parameter from a \code{ds.gamlss} object.
-#' @details The predict function assumes that the object given in \code{newdata} is a 
-#' data frame containing the right x-variables used in the model.
-#' @param object a DataSHIELD GAMLSS fitted model output by \code{ds.gamlss}. 
-#' @param newdata a data frame containing new values for the explanatory variables used
-#' in the model.
-#' @param what distribution parameter that should be predicted. The default is 
-#' \code{what="mu"}.
-#' @param type the default value \code{type="link"} gets the linear predictor for the 
-#' specified distribution parameter. \code{type="response"} gets the fitted values for
-#' the distribution parameter.
-#' @return a vector with the predictions for \code{newdata}.
+#' @title Derive predictions for \code{ds.gamlss} objects
+#' @description This function predicts the specified distribution parameter for a new data set from a
+#' \code{ds.gamlss} object that is output by the \code{\link[dsGamlssClient]{ds.gamlss}} function.
+#' @details The \code{ds.predict.gamlss} function assumes that the object given in \code{newdata} is a 
+#' data frame containing the explanatory variables that are used in the model.
+#' @param object A \code{ds.gamlss} object output by \code{\link[dsGamlssClient]{ds.gamlss}}. 
+#' @param newdata A data frame containing new values for the explanatory variables that are used in the model.
+#' @param what A string, specifying the distribution parameter that should be predicted. Default \code{what="mu"}.
+#' @param type A string, specifying the kind of predictions that should be derived. The default value \code{type="link"} 
+#' predicts the linear predictor for the specified distribution parameter, whereas \code{type="response"} predicts the
+#' fitted values for the distribution parameter.
+#' @return A vector with the predictions for \code{newdata}.
 #' @author Annika Swenne
 #' @export
-
+#' @examples
+#' library(DSLite)
+#' data(mtcars)
+#' 
+#' ## Create newdata for predictions
+#' newdata <- data.frame(wt = seq(2, 5, by=0.01))
+#'
+#' ## Fit ds.gamlss model
+#' # Set up DSLite server
+#' dslite.server1 <- newDSLiteServer(tables=list(data=mtcars[c(1:15),]), 
+#'   config = defaultDSConfiguration(include=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist")))
+#' dslite.server2 <- newDSLiteServer(tables=list(data=mtcars[c(16:nrow(mtcars)),]), 
+#'   config = defaultDSConfiguration(include=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist")))
+#' builder <- DSI::newDSLoginBuilder()
+#' builder$append(server = "study1", url="dslite.server1", table="data", driver="DSLiteDriver")
+#' builder$append(server = "study2", url="dslite.server2", table="data", driver="DSLiteDriver")
+#' logindata.dslite <- builder$build()
+#' # Login to the virtualized server
+#' conns <- DSI::datashield.login(logindata.dslite, assign=TRUE)
+#' DSI::datashield.assign.table(conns=conns, symbol="D", table=c("data", "data"))
+#' # Fit model
+#' model <- ds.gamlss(formula = mpg ~ pb(wt), sigma.formula = ~ wt, data = 'D', family = 'NO()')
+#' # Logout
+#' DSI::datashield.logout(conns)
+#' 
+#' ## Examples
+#' # Example 1: Predict mu
+#' mu.response <- ds.predict.gamlss(model, newdata, what="mu", type="response")
+#' 
+#' # Example 2: Predict linear predictor for sigma
+#' sigma.link <- ds.predict.gamlss(model, newdata, what="sigma", type="link")
 
 ds.predict.gamlss <- function(object, newdata, what="mu",
                               type="link"){
@@ -81,6 +109,7 @@ ds.predict.gamlss <- function(object, newdata, what="mu",
   }
   
   pb <- utils::getFromNamespace("pb", "gamlss")
+  pb.control <- utils::getFromNamespace("pb.control", "gamlss")
   
   ## Get estimated model parameters for distribution parameter what
   par.coef <- eval(parse(text=paste("object$", what, ".coefficients", sep="")), envir=environment())
@@ -115,9 +144,12 @@ ds.predict.gamlss <- function(object, newdata, what="mu",
         name <- strsplit(name, split="$", fixed=TRUE)[[1]][2]
       }
       knots <- eval(parse(text=paste("object$", what, ".coefSmo[[", i, "]]$knots", sep="")), envir=environment())
-      if (length(grep(pattern="pb.control", x=par.pb.args[[i]], fixed=TRUE))>0) {
+      args <- par.pb.args[[i]]
+      if (length(grep(pattern="pb.control", x=args, fixed=TRUE))>0) {
         # control parameters specified
-        pb.control <- eval(parse(text=par.pb.args[[i]][grep(pattern="pb.control", x=par.pb.args[[i]], fixed=TRUE)]), envir=asNamespace("gamlss"))
+        text <- args[grep(pattern="pb.control", x=args, fixed=TRUE)]
+        text <- sub(".*(pb\\.control\\(.*\\))", "\\1", text)
+        pb.control <- eval(parse(text=paste(text)), envir=asNamespace("gamlss"))
       } else {
         # no control parameters specified - use default
         pb.control <- eval(parse(text="pb.control()"), envir=asNamespace("gamlss"))
