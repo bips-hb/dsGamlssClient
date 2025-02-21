@@ -15,8 +15,8 @@ gamlssChecks(
 }
 \arguments{
 \item{formula}{A string, specifying the model for the mu distribution parameter. The response
-is on the left of an ~ operator, and the terms, separated by + operators, are on the right. Currently, only 
-penalized beta splines, indicated by \code{pb()}, are supported for nonparametric smoothing, 
+is on the left of an ~ operator, and the terms, separated by + operators, are on the right. Currently, only
+penalized beta splines, indicated by \code{pb()}, are supported for nonparametric smoothing,
 e.g. \code{'y~pb(x1)+x2+x2*x3'}.}
 
 \item{sigma.formula}{A string, specifying the model for the sigma distribution parameter, as in \code{formula}.
@@ -31,7 +31,7 @@ The only difference is, that it is not necessary to specify the response variabl
 \item{data}{A string, specifying the name of an (optional) data frame on the server-side containing the variables occurring in the formulas.
 If this is missing, the variables should be on the parent environment on the server-side or referenced explicitly as \code{dataname$varname}.}
 
-\item{datasources}{A list of \code{\link[DSI]{DSConnection-class}} 
+\item{datasources}{A list of \code{\link[DSI]{DSConnection-class}}
 objects obtained after login. If the \code{datasources} argument is not specified
 the default set of connections will be used: see \code{\link[DSI]{datashield.connections_default}}.}
 }
@@ -40,7 +40,7 @@ An integer, 0 if check was passed and 1 if the tests failed
 }
 \description{
 This is an internal function required by the client function \code{{ds.gamlss}}
-to verify that all variables specified in the formulas for the \code{ds.gamlss} model exist on the server and 
+to verify that all variables specified in the formulas for the \code{ds.gamlss} model exist on the server and
 to ensure the process does not halt inadvertently.
 }
 \details{

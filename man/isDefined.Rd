@@ -7,14 +7,14 @@
 isDefined(datasources = NULL, obj = NULL, error.message = TRUE)
 }
 \arguments{
-\item{datasources}{A list of \code{\link[DSI]{DSConnection-class}} 
+\item{datasources}{A list of \code{\link[DSI]{DSConnection-class}}
 objects obtained after login. If the \code{datasources} argument is not specified
 the default set of connections will be used: see \code{\link[DSI]{datashield.connections_default}}.}
 
 \item{obj}{A string with the name of the object(s) to look for.}
 
 \item{error.message}{A Boolean which specifies if the function should stop and return
-an error message when the input object is not defined on one or more servers (\code{error.message=TRUE}) 
+an error message when the input object is not defined on one or more servers (\code{error.message=TRUE})
 or if it should return a list of \code{TRUE/FALSE} indicating on which server the object is defined
 (\code{error.message=FALSE}). Default \code{error.message=TRUE}.}
 }

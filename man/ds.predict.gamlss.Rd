@@ -13,7 +13,7 @@ ds.predict.gamlss(object, newdata, what = "mu", type = "link")
 
 \item{what}{A string, specifying the distribution parameter that should be predicted. Default \code{what="mu"}.}
 
-\item{type}{A string, specifying the kind of predictions that should be derived. The default value \code{type="link"} 
+\item{type}{A string, specifying the kind of predictions that should be derived. The default value \code{type="link"}
 predicts the linear predictor for the specified distribution parameter, whereas \code{type="response"} predicts the
 fitted values for the distribution parameter.}
 }
@@ -25,7 +25,7 @@ This function predicts the specified distribution parameter for a new data set f
 \code{ds.gamlss} object that is output by the \code{\link[dsGamlssClient]{ds.gamlss}} function.
 }
 \details{
-The \code{ds.predict.gamlss} function assumes that the object given in \code{newdata} is a 
+The \code{ds.predict.gamlss} function assumes that the object given in \code{newdata} is a
 data frame containing the explanatory variables that are used in the model.
 }
 \examples{
@@ -33,32 +33,36 @@ library(DSLite)
 data(mtcars)
 
 ## Create newdata for predictions
-newdata <- data.frame(wt = seq(2, 5, by=0.01))
+newdata <- data.frame(wt = seq(2, 5, by = 0.01))
 
 ## Fit ds.gamlss model
 # Set up DSLite server
-dslite.server1 <- newDSLiteServer(tables=list(data=mtcars[c(1:15),]), 
-  config = defaultDSConfiguration(include=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist")))
-dslite.server2 <- newDSLiteServer(tables=list(data=mtcars[c(16:nrow(mtcars)),]), 
-  config = defaultDSConfiguration(include=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist")))
+dslite.server1 <- newDSLiteServer(
+  tables = list(data = mtcars[c(1:15), ]),
+  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss", "gamlss", "gamlss.dist"))
+)
+dslite.server2 <- newDSLiteServer(
+  tables = list(data = mtcars[c(16:nrow(mtcars)), ]),
+  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss", "gamlss", "gamlss.dist"))
+)
 builder <- DSI::newDSLoginBuilder()
-builder$append(server = "study1", url="dslite.server1", table="data", driver="DSLiteDriver")
-builder$append(server = "study2", url="dslite.server2", table="data", driver="DSLiteDriver")
+builder$append(server = "study1", url = "dslite.server1", table = "data", driver = "DSLiteDriver")
+builder$append(server = "study2", url = "dslite.server2", table = "data", driver = "DSLiteDriver")
 logindata.dslite <- builder$build()
 # Login to the virtualized server
-conns <- DSI::datashield.login(logindata.dslite, assign=TRUE)
-DSI::datashield.assign.table(conns=conns, symbol="D", table=c("data", "data"))
+conns <- DSI::datashield.login(logindata.dslite, assign = TRUE)
+DSI::datashield.assign.table(conns = conns, symbol = "D", table = c("data", "data"))
 # Fit model
-model <- ds.gamlss(formula = mpg ~ pb(wt), sigma.formula = ~ wt, data = 'D', family = 'NO()')
+model <- ds.gamlss(formula = mpg ~ pb(wt), sigma.formula = ~wt, data = "D", family = "NO()")
 # Logout
 DSI::datashield.logout(conns)
 
 ## Examples
 # Example 1: Predict mu
-mu.response <- ds.predict.gamlss(model, newdata, what="mu", type="response")
+mu.response <- ds.predict.gamlss(model, newdata, what = "mu", type = "response")
 
 # Example 2: Predict linear predictor for sigma
-sigma.link <- ds.predict.gamlss(model, newdata, what="sigma", type="link")
+sigma.link <- ds.predict.gamlss(model, newdata, what = "sigma", type = "link")
 }
 \author{
 Annika Swenne

@@ -7,7 +7,7 @@
 getPooledMean(datasources, x)
 }
 \arguments{
-\item{datasources}{A list of \code{\link[DSI]{DSConnection-class}} 
+\item{datasources}{A list of \code{\link[DSI]{DSConnection-class}}
 objects obtained after login. If the \code{datasources} argument is not specified
 the default set of connections will be used: see \code{\link[DSI]{datashield.connections_default}}.}
 

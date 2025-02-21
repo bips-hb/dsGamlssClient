@@ -21,7 +21,7 @@ test_that("output_isDefined_dataframeD", {
 })
 
 test_that("output_isDefined_dataframeE", {
-  expect_error(isDefined(ds.test_env$connections, "E"), "The input object E is not defined in server1, server2, server3!", fixed=TRUE)
+  expect_error(isDefined(ds.test_env$connections, "E"), "The input object E is not defined in server1, server2, server3!", fixed = TRUE)
 })
 
 test_that("output_isDefined_dataframeD_columne3_bw", {
@@ -35,11 +35,11 @@ test_that("output_isDefined_dataframeD_columne3_bw", {
 })
 
 test_that("output_isDefined_dataframeD_columnA", {
-  expect_error(isDefined(ds.test_env$connections, "D$A"), "The input object D$A is not defined in server1, server2, server3!", fixed=TRUE)
+  expect_error(isDefined(ds.test_env$connections, "D$A"), "The input object D$A is not defined in server1, server2, server3!", fixed = TRUE)
 })
 
 test_that("output_isDefined_dataframeE_columnA", {
-  expect_error(isDefined(ds.test_env$connections, "E$A"), "There are some DataSHIELD errors:", fixed=TRUE)
+  expect_error(isDefined(ds.test_env$connections, "E$A"), "There are some DataSHIELD errors:", fixed = TRUE)
 })
 
 # error.message = FALSE
@@ -85,7 +85,7 @@ test_that("output_isDefined_dataframeD_columnA_errormessageFALSE", {
 })
 
 test_that("output_isDefined_dataframeE_columnA_errormessageFALSE", {
-  expect_error(isDefined(ds.test_env$connections, "E$A", error.message=FALSE), "There are some DataSHIELD errors:", fixed=TRUE)
+  expect_error(isDefined(ds.test_env$connections, "E$A", error.message = FALSE), "There are some DataSHIELD errors:", fixed = TRUE)
 })
 
 #

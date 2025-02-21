@@ -27,8 +27,8 @@ ds.gamlss(
 }
 \arguments{
 \item{formula}{A formula object, specifying the model for the mu distribution parameter. The response
-is on the left of an ~ operator, and the terms, separated by + operators, are on the right. Currently, only 
-penalized beta splines, indicated by \code{pb()}, are supported for nonparametric smoothing, 
+is on the left of an ~ operator, and the terms, separated by + operators, are on the right. Currently, only
+penalized beta splines, indicated by \code{pb()}, are supported for nonparametric smoothing,
 e.g. \code{y~pb(x1)+x2+x2*x3}.}
 
 \item{sigma.formula}{A formula object, specifying the model for the sigma distribution parameter, as in \code{formula}.
@@ -41,23 +41,23 @@ The only difference is, that it is not necessary to specify the response variabl
 The only difference is, that it is not necessary to specify the response variable, e.g. \code{tau.formula=~pb(x)}.}
 
 \item{family}{A string, specifying the distribution of the response variable and the link functions
-of the distribution parameters. Currently, the following families are supported: \code{family=c('NO()', 'NO2()', 'BCCG()', 'BCPE()')}. 
-Details on the distributions can be found in \code{\link[gamlss.dist]{gamlss.family}}. 
+of the distribution parameters. Currently, the following families are supported: \code{family=c('NO()', 'NO2()', 'BCCG()', 'BCPE()')}.
+Details on the distributions can be found in \code{\link[gamlss.dist]{gamlss.family}}.
 Default \code{family='NO()'}.}
 
 \item{data}{A string, specifying the name of an (optional) data frame on the server-side containing the variables occurring in the formulas.
 If this is missing, the variables should be on the parent environment on the server-side or referenced explicitly as \code{dataname$varname}.}
 
-\item{min.values}{A numeric vector specifying minimum values for the covariates, which are used to determine the knots for \code{pb()}. 
+\item{min.values}{A numeric vector specifying minimum values for the covariates, which are used to determine the knots for \code{pb()}.
 If \code{min.values=NULL} an anonymized (noisy) minimum is used instead to determine the knots on all servers. Default \code{min.values=NULL}.}
 
-\item{max.values}{A numeric vector specifying maximum values for the covariates, which are used to determine the knots for \code{pb()}. 
+\item{max.values}{A numeric vector specifying maximum values for the covariates, which are used to determine the knots for \code{pb()}.
 If \code{max.values=NULL} an anonymized (noisy) maximum is used instead to determine the knots on all servers. Default \code{min.values=NULL}.}
 
-\item{min.max.names}{A string vector specifying the names for the minimum (\code{min.values}) and maximum values (\code{max.values}). 
+\item{min.max.names}{A string vector specifying the names for the minimum (\code{min.values}) and maximum values (\code{max.values}).
 Only required if \code{min.values} or \code{max.values} are given. Default \code{min.max.names=NULL}.}
 
-\item{checks}{Logical, if \code{checks=TRUE} \code{ds.gamlss} checks whether the required variables for the model exist on each server and are 
+\item{checks}{Logical, if \code{checks=TRUE} \code{ds.gamlss} checks whether the required variables for the model exist on each server and are
 not completely missing. Default \code{checks=FALSE}.}
 
 \item{mu.fix}{Logical, indicating whether the mu distribution parameter should be kept fixed during the fitting processes. Default \code{mu.fix=FALSE}.}
@@ -68,31 +68,31 @@ not completely missing. Default \code{checks=FALSE}.}
 
 \item{tau.fix}{Logical, indicating whether the tau distribution parameter should be kept fixed during the fitting processes. Default \code{tau.fix=FALSE}.}
 
-\item{control}{Numeric vector with seven elements that sets the control parameters of the outer iterations algorithm 
-using the \code{\link[gamlss]{gamlss.control}} function: (i) c.crit 
-(the convergence criterion for the algorithm), (ii) n.cyc (the number of cycles of 
-the algorithm), (iii) mu.step (the step length for the distribution parameter mu), (iv) sigma.step 
+\item{control}{Numeric vector with seven elements that sets the control parameters of the outer iterations algorithm
+using the \code{\link[gamlss]{gamlss.control}} function: (i) c.crit
+(the convergence criterion for the algorithm), (ii) n.cyc (the number of cycles of
+the algorithm), (iii) mu.step (the step length for the distribution parameter mu), (iv) sigma.step
 (the step length for the distribution parameter sigma), (v) nu.step (the step length for the
-distribution parameter nu), (vi) tau.step (the step length for the distribution parameter tau), 
+distribution parameter nu), (vi) tau.step (the step length for the distribution parameter tau),
 (vii) gd.tol (global deviance tolerance level). Default \code{control=c(0.001, 20, 1, 1, 1, 1, Inf)}.}
 
-\item{i.control}{Numeric vector with four elements that sets the control parameters of the inner iterations of the 
+\item{i.control}{Numeric vector with four elements that sets the control parameters of the inner iterations of the
 RS algorithm using the \code{\link[gamlss]{glim.control}} function: (i) cc (the convergence criterion for the algorithm),
-(ii) cyc (the number of cycles of the algorithm), (iii) bf.cyc (the number of cycles of the backfitting 
-algorithm), (iv) bf.tol (the convergence criterion (tolerance level) for the backfitting algorithm). Default 
+(ii) cyc (the number of cycles of the algorithm), (iii) bf.cyc (the number of cycles of the backfitting
+algorithm), (iv) bf.tol (the convergence criterion (tolerance level) for the backfitting algorithm). Default
 \code{i.control=c(0.001, 50, 30, 0.001)}.}
 
-\item{autostep}{Logical, indicating whether the steps should be halved automatically 
+\item{autostep}{Logical, indicating whether the steps should be halved automatically
 if the new global deviance is greater than the old one. Default \code{autostep=TRUE}.}
 
-\item{datasources}{A list of \code{\link[DSI]{DSConnection-class}} 
+\item{datasources}{A list of \code{\link[DSI]{DSConnection-class}}
 objects obtained after login. If the \code{datasources} argument is not specified
 the default set of connections will be used: see \code{\link[DSI]{datashield.connections_default}}.}
 }
 \value{
-A ds.gamlss object with all components as in the \code{\link[gamlss]{gamlss}} function. 
-Individual-level information like the components \code{y} (the response) and 
-\code{residuals} (the normalised quantile residuals of the model) are not disclosed to 
+A ds.gamlss object with all components as in the \code{\link[gamlss]{gamlss}} function.
+Individual-level information like the components \code{y} (the response) and
+\code{residuals} (the normalised quantile residuals of the model) are not disclosed to
 the client-side.
 }
 \description{
@@ -102,13 +102,13 @@ using DataSHIELD on data from a single source or multiple sources on the server 
 \details{
 Fits a Generalized Additive model for Location, scale and shape (GAMLSS)
 using DataSHIELD on data from a single source or multiple sources on the server side. In the latter
-case, the data are co-analysed (when using \code{ds.gamlss})  by using an approach 
+case, the data are co-analysed (when using \code{ds.gamlss})  by using an approach
 that is mathematically equivalent to placing all individual-level data from all sources
-in one central warehouse and analysing those data using the conventional 
+in one central warehouse and analysing those data using the conventional
 \code{\link[gamlss]{gamlss}} function in R. For additional details please see the header of the
  \code{\link[gamlss]{gamlss}} function.
 
-Server functions called: \code{gamlssDS1}, 
+Server functions called: \code{gamlssDS1},
                          \code{gamlssDS2},
                          \code{gamlssDS3},
                          \code{gamlssDS4},
@@ -120,32 +120,38 @@ library(DSLite)
 data(mtcars)
 
 ## Set up DSLite server
-dslite.server1 <- newDSLiteServer(tables=list(data=mtcars[c(1:15),]), 
-  config = defaultDSConfiguration(include=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist")))
-dslite.server2 <- newDSLiteServer(tables=list(data=mtcars[c(16:nrow(mtcars)),]), 
-  config = defaultDSConfiguration(include=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist")))
+dslite.server1 <- newDSLiteServer(
+  tables = list(data = mtcars[c(1:15), ]),
+  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss", "gamlss", "gamlss.dist"))
+)
+dslite.server2 <- newDSLiteServer(
+  tables = list(data = mtcars[c(16:nrow(mtcars)), ]),
+  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss", "gamlss", "gamlss.dist"))
+)
 builder <- DSI::newDSLoginBuilder()
-builder$append(server = "study1", url="dslite.server1", table="data", driver="DSLiteDriver")
-builder$append(server = "study2", url="dslite.server2", table="data", driver="DSLiteDriver")
+builder$append(server = "study1", url = "dslite.server1", table = "data", driver = "DSLiteDriver")
+builder$append(server = "study2", url = "dslite.server2", table = "data", driver = "DSLiteDriver")
 logindata.dslite <- builder$build()
 # Login to the virtualized server
-conns <- DSI::datashield.login(logindata.dslite, assign=TRUE)
-DSI::datashield.assign.table(conns=conns, symbol="D", table=c("data", "data"))
+conns <- DSI::datashield.login(logindata.dslite, assign = TRUE)
+DSI::datashield.assign.table(conns = conns, symbol = "D", table = c("data", "data"))
 
 ## Examples
 # Example 1: parametric model
-model1 <- ds.gamlss(formula = mpg ~ wt, sigma.formula = ~ disp, data = 'D', family = 'NO()')
+model1 <- ds.gamlss(formula = mpg ~ wt, sigma.formula = ~disp, data = "D", family = "NO()")
 
 # Example 2: penalized beta splines
-model2 <- ds.gamlss(formula = mpg ~ pb(wt), sigma.formula = ~ disp, data = 'D', family = 'NO()')
+model2 <- ds.gamlss(formula = mpg ~ pb(wt), sigma.formula = ~disp, data = "D", family = "NO()")
 
 # Example 3: penalized beta splines with known minimum and maximum
-model3 <- ds.gamlss(formula = mpg ~ pb(wt), sigma.formula = ~ disp, 
-                    min.values = min(mtcars$wt), 
-                    max.values = max(mtcars$wt), 
-                    min.max.names = 'wt',
-                    data = 'D', family = 'NO()')
-                    
+model3 <- ds.gamlss(
+  formula = mpg ~ pb(wt), sigma.formula = ~disp,
+  min.values = min(mtcars$wt),
+  max.values = max(mtcars$wt),
+  min.max.names = "wt",
+  data = "D", family = "NO()"
+)
+
 ## Logout
 DSI::datashield.logout(conns)
 }

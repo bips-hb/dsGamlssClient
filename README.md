@@ -64,16 +64,20 @@ First, two DSlite servers are set up, each containing a subset of the
 `mtcars` data.
 
 ``` r
-dslite.server1 <- newDSLiteServer(tables=list(data=mtcars[c(1:15),]), 
-                                  config = defaultDSConfiguration(include=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist")))
-dslite.server2 <- newDSLiteServer(tables=list(data=mtcars[c(16:nrow(mtcars)),]), 
-                                  config = defaultDSConfiguration(include=c("dsBase", "dsGamlss", "gamlss", "gamlss.dist")))
+dslite.server1 <- newDSLiteServer(
+  tables = list(data = mtcars[c(1:15), ]),
+  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss", "gamlss", "gamlss.dist"))
+)
+dslite.server2 <- newDSLiteServer(
+  tables = list(data = mtcars[c(16:nrow(mtcars)), ]),
+  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss", "gamlss", "gamlss.dist"))
+)
 builder <- DSI::newDSLoginBuilder()
-builder$append(server = "study1", url="dslite.server1", table="data", driver="DSLiteDriver")
-builder$append(server = "study2", url="dslite.server2", table="data", driver="DSLiteDriver")
+builder$append(server = "study1", url = "dslite.server1", table = "data", driver = "DSLiteDriver")
+builder$append(server = "study2", url = "dslite.server2", table = "data", driver = "DSLiteDriver")
 logindata.dslite <- builder$build()
 # Login to the virtualized server
-conns <- DSI::datashield.login(logindata.dslite, assign=TRUE)
+conns <- DSI::datashield.login(logindata.dslite, assign = TRUE)
 #> 
 #> Logging into the collaborating servers
 #> 
@@ -82,7 +86,7 @@ conns <- DSI::datashield.login(logindata.dslite, assign=TRUE)
 #>   (the whole dataset) will be assigned to R!
 #> 
 #> Assigning table data...
-DSI::datashield.assign.table(conns=conns, symbol="D", table=c("data", "data"))
+DSI::datashield.assign.table(conns = conns, symbol = "D", table = c("data", "data"))
 ```
 
 Then, one can apply the `ds.gamlss` function to fit a GAMLSS model. In
@@ -91,11 +95,13 @@ used to determine the knots for the penalized beta spline, are known and
 non-disclosive.
 
 ``` r
-model <- ds.gamlss(formula = mpg ~ pb(wt), sigma.formula = ~ wt, 
-                   min.values = min(mtcars$wt), 
-                   max.values = max(mtcars$wt), 
-                   min.max.names = "wt",
-                   data = 'D', family = 'NO()')
+model <- ds.gamlss(
+  formula = mpg ~ pb(wt), sigma.formula = ~wt,
+  min.values = min(mtcars$wt),
+  max.values = max(mtcars$wt),
+  min.max.names = "wt",
+  data = "D", family = "NO()"
+)
 #> Outer iteration 1...
 #> Outer iteration 2...
 #> Outer iteration 3...
@@ -105,7 +111,7 @@ However, this might not always be the case and instead, an anonymized
 minimum and maximum can be used to determine the knots.
 
 ``` r
-model <- ds.gamlss(formula = mpg ~ pb(wt), sigma.formula = ~ wt, data = 'D', family = 'NO()')
+model <- ds.gamlss(formula = mpg ~ pb(wt), sigma.formula = ~wt, data = "D", family = "NO()")
 #> Outer iteration 1...
 #> Outer iteration 2...
 #> Outer iteration 3...
@@ -123,8 +129,8 @@ Therefore a new data frame with the explanatory variables included in
 the model must be created.
 
 ``` r
-newdata <- data.frame(wt = seq(2, 5, by=0.01))
-mu.response <- ds.predict.gamlss(model, newdata, what="mu", type="response")
+newdata <- data.frame(wt = seq(2, 5, by = 0.01))
+mu.response <- ds.predict.gamlss(model, newdata, what = "mu", type = "response")
 head(mu.response)
 #>       [,1]
 #> 1 27.71961
