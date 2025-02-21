@@ -18,17 +18,17 @@ package \[2\].
 ### DataSHIELD
 
 DataSHIELD is a software infrastructure which allows you to do
-non-disclosive federated analysis on sensitive data. The
-[DataSHIELD](https://www.datashield.org) website has in depth
-descriptions of what it is, how it works and how to install it. A key
-point to highlight is that DataSHIELD has a client-server
-infrastructure, so the `dsGamlssClient` package needs to be used in
-conjunction with the [dsGamlss](https://github.com/bips-hb/dsGamlss)
-package - trying to use one without the other makes no sense. Detailed
-instructions on how to install DataSHIELD can be found at the DataSHIELD
-[Wiki](https://www.datashield.org/wiki). Discussion and help with using
-DataSHIELD can be obtained from the DataSHIELD
-[Forum](https://datashield.discourse.group/).
+non-disclosive federated analysis on sensitive data. The [DataSHIELD
+website](https://www.datashield.org) has in depth descriptions of what
+it is, how it works and how to install it. A key point to highlight is
+that DataSHIELD has a client-server infrastructure, so the
+`dsGamlssClient` package needs to be used in conjunction with the
+[dsGamlss](https://github.com/bips-hb/dsGamlss) package - trying to use
+one without the other makes no sense. Detailed instructions on how to
+install DataSHIELD can be found at the [DataSHIELD
+Wiki](https://www.datashield.org/wiki). Discussion and help with using
+DataSHIELD can be obtained from the [DataSHIELD
+Forum](https://datashield.discourse.group/).
 
 ## Installation
 
@@ -40,37 +40,79 @@ You can install the package `dsGamlssClient` from
 devtools::install_github("bips-hb/dsGamlssClient")
 ```
 
+To successfully run the package, the
+[dsBase](https://github.com/datashield/dsBase) and
+[dsGamlss](https://github.com/bips-hb/dsGamlss) server-side packages
+must be installed on each DataSHIELD server. Instructions on how to
+install a server-side package on a DataSHIELD server can be found in the
+[Data Manager
+Section](https://wiki.datashield.org/en/getting-started/data-manager/overview)
+at the DataSHIELD Wiki.
+
 ## Example
 
-This example uses the server-less DataSHIELD implementation
+The example uses the server-less DataSHIELD implementation
 [DSLite](https://cran.r-project.org/package=DSLite) \[3\] to illustrate
 the use of the package’s main functions `ds.gamlss` and
-`ds.predict.gamlss`. For illustrative purposes, the `mtcars` example
-data is split across two servers. Analyzing the data on the two servers
-jointly with `ds.gamlss`, is mathematically equivalent to fitting a
-GAMLSS model to the whole `mtcars` data. Note however, that if
+`ds.predict.gamlss`. Thus, access to a DataSHIELD server is not required
+to follow the example.
+
+First, you need to install the `DSLite` package, which is available on
+[CRAN](https://cran.r-project.org/).
+
+``` r
+install.packages("DSLite", repos = "https://cloud.r-project.org/")
+```
+
+Note that the `DSLite` package is only required if you want to use the
+server-less DataSHIELD implementation. If instead you are using
+[Armadillo](https://molgenis.github.io/molgenis-service-armadillo/) or
+[Opal](https://opaldoc.obiba.org/en/latest/) DataSHIELD servers you must
+to install the
+[DSMolgenisArmadillo](https://cran.r-project.org/package=DSMolgenisArmadillo)
+or [DSOpal](https://cran.r-project.org/package=DSOpal) package from CRAN
+with `install.packages("DSMolgenisArmadillo")` or
+`install.packages("DSOpal")`.
+
+Furthermore, to follow the example, the server-side packages `dsBase`
+and `dsGamlss` must be installed from GitHub in the global environment.
+Again, this is only necessary for the server-less DataSHIELD
+implementation. If you are using Armadillo or Opal DataSHIELD servers,
+you must install the `dsBase` and `dsGamlss` packages on the server, as
+described e.g. in the [Data Manager
+Section](https://wiki.datashield.org/en/getting-started/data-manager/overview)
+at the DataSHIELD Wiki.
+
+``` r
+# install.packages("devtools")
+devtools::install_github("datashield/dsBase")
+#devtools::install_github("bips-hb/dsGamlss")
+library(dsGamlssClient)
+library(DSLite)
+library(dsBase)
+library(dsGamlss)
+data(mtcars)
+```
+
+For illustrative purposes, the `mtcars` example data is split across two
+servers. Therefore, two `DSLite` servers are set up, with the required
+server-side packages `dsBase` and `dsGamlss`. Furthermore, each server
+holds a subset of the `mtcars` data. Analyzing the data on the two
+servers jointly with `ds.gamlss`, is mathematically equivalent to
+fitting a GAMLSS model to the whole `mtcars` data. Note however, that if
 nonparametric terms are included in the model, there might be slight
 numerical differences between `ds.gamlss` and `gamlss::gamlss`, since
 the matrix equation to obtain the regression coefficients is solved
 differently.
 
 ``` r
-library(dsGamlssClient)
-library(DSLite)
-data(mtcars)
-```
-
-First, two DSlite servers are set up, each containing a subset of the
-`mtcars` data.
-
-``` r
 dslite.server1 <- newDSLiteServer(
   tables = list(data = mtcars[c(1:15), ]),
-  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss", "gamlss", "gamlss.dist"))
+  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss"))
 )
 dslite.server2 <- newDSLiteServer(
   tables = list(data = mtcars[c(16:nrow(mtcars)), ]),
-  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss", "gamlss", "gamlss.dist"))
+  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss"))
 )
 builder <- DSI::newDSLoginBuilder()
 builder$append(server = "study1", url = "dslite.server1", table = "data", driver = "DSLiteDriver")
