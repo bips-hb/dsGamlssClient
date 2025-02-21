@@ -1236,7 +1236,10 @@ ds.gamlss <- function(formula = NULL, sigma.formula = ~1, nu.formula = ~1, tau.f
   ## delete temporary variables (prefix temp_) will be deleted
   symbols.ds <- DSI::datashield.symbols(conns=datasources)[[1]]
   temp.variables <- symbols.ds[grep("^temp_", symbols.ds)]
-  DSI::datashield.rm(conns=datasources, temp.variables)
+  # With Opal (unlike with DSLite) it is not possible to provide a string vector for deletion. Instead, each temporary variable is deleted individually
+  lapply(temp.variables, function(var) {
+    DSI::datashield.rm(conns = datasources, symbol = var)
+  })
   
   return(mod.gamlss.ds)
   
