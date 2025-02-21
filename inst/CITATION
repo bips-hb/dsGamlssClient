@@ -1,11 +1,8 @@
 bibentry(
-  bibtype  = "Article",
-  title    = ,
-  author   = ,
-  journal  = ,
-  year     = ,
-  volume   = ,
-  number   = ,
-  pages    = ,
-  doi      =
+  bibtype  = "Misc",
+  title    = "dsGamlssClient",
+  author   = "Annika Swenne",
+  year     = "2025",
+  url      = "https://github.com/bibs-hb/dsGamlssClient",
+  note     = "R package version 0.1.0"
 )
