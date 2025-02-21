@@ -1,7 +1,7 @@
 Package: dsGamlssClient
 Title: DataSHIELD client-side functions for Generalized Additive Models
     for Location, Scale and Shape
-Version: 1.0.0
+Version: 0.1.0
 Authors@R: 
     person("Annika", "Swenne", , "swenne@leibniz-bips.de", role = c("aut", "cre"))
 Description: DataSHIELD client-side functions to fit Generalized Additive
