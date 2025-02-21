@@ -32,7 +32,7 @@ Forum](https://datashield.discourse.group/).
 
 ## Installation
 
-You can install the package `dsGamlssClient` from
+You can install the `dsGamlssClient` package from
 [GitHub](https://github.com/) with:
 
 ``` r
