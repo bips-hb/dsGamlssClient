@@ -39,11 +39,11 @@ newdata <- data.frame(wt = seq(2, 5, by = 0.01))
 # Set up DSLite server
 dslite.server1 <- newDSLiteServer(
   tables = list(data = mtcars[c(1:15), ]),
-  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss", "gamlss", "gamlss.dist"))
+  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss"))
 )
 dslite.server2 <- newDSLiteServer(
   tables = list(data = mtcars[c(16:nrow(mtcars)), ]),
-  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss", "gamlss", "gamlss.dist"))
+  config = defaultDSConfiguration(include = c("dsBase", "dsGamlss"))
 )
 builder <- DSI::newDSLoginBuilder()
 builder$append(server = "study1", url = "dslite.server1", table = "data", driver = "DSLiteDriver")

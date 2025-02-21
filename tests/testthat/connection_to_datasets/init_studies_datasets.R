@@ -56,7 +56,7 @@ init.studies.dataset.gamlss <- function(variables) {
       ds.test_env$login.data <- builder$build()
     } else {
       ds.test_env$login.data <- setupGAMLSSTest(
-        packages = c("dsBase", "dsGamlss", "gamlss", "gamlss.dist"),
+        packages = c("dsBase", "dsGamlss"),
         env = ds.test_env
       )
     }
