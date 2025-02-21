@@ -26,7 +26,7 @@ DataSHIELD is a software infrastructure which allows you to do non-disclosive fe
 
 ## Installation
 
-You can install the development version of `dsGamlssClient` from [GitHub](https://github.com/) with:
+You can install the package `dsGamlssClient` from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
