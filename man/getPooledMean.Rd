@@ -24,4 +24,7 @@ This function is called to avoid calling the client function \code{\link[dsBaseC
 which may stop the process due to some checks not required when computing a mean inside
 a function.
 }
+\author{
+DataSHIELD Development Team
+}
 \keyword{internal}

@@ -23,4 +23,7 @@ This is an internal function based on the internal \code{\link[dsBaseClient]{get
 This function is called to avoid calling the client function \code{\link[dsBaseClient]{ds.var}}
 which may stop the process due to some checks not required when computing a mean inside a function.
 }
+\author{
+DataSHIELD Development Team
+}
 \keyword{internal}

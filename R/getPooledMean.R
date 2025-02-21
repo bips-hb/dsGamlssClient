@@ -10,6 +10,7 @@
 #' @param x A string with the name of a numeric vector for which the mean should be computed
 #' @keywords internal
 #' @return A numeric value, giving the pooled mean.
+#' @author DataSHIELD Development Team
 #'
 getPooledMean <- function(datasources, x) {
   num.sources <- length(datasources)

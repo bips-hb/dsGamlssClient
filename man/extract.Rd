@@ -20,4 +20,7 @@ a list with the following elements
 This is an internal function based on the internal \code{\link[dsBaseClient]{extract}} function from \code{dsBaseClient} (version 6.3.0). It splits
 the input by the '$' symbol and returns the single elements as a list.
 }
+\author{
+DataSHIELD Development Team
+}
 \keyword{internal}

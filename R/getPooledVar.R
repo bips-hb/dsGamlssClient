@@ -9,6 +9,7 @@
 #' @param x A string with the name of a numeric vector for which the variance should be computed.
 #' @keywords internal
 #' @return A numeric value, giving the pooled variance.
+#' @author DataSHIELD Development Team
 #'
 getPooledVar <- function(datasources, x) {
   num.sources <- length(datasources)

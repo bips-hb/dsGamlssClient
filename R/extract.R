@@ -9,6 +9,7 @@
 #' \item{\code{holders}}{The strings before the '$' symbol.}
 #' \item{\code{elements}}{The strings after the '$' symbol.}
 #' }
+#' @author DataSHIELD Development Team
 #'
 extract <- function(input) {
   input <- unlist(input)
