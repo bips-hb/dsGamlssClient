@@ -1,3 +1,3 @@
 # dsGamlssClient 0.1.0
 
-* First clean version of the package
+* First experimental version of the package
