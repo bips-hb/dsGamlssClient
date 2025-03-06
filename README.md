@@ -4,6 +4,8 @@
 # dsGamlssClient
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/bips-hb/dsGamlssClient/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bips-hb/dsGamlssClient/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The `dsGamlssClient` package is a

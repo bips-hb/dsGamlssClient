@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/bips-hb/dsGamlssClient/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bips-hb/dsGamlssClient/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The `dsGamlssClient` package is a [DataSHIELD](https://www.datashield.org) client-side package that includes the server-side functions to fit Generalized Additive Models for Location, Scale and Shape (GAMLSS) [1] using DataSHIELD. It is based on the original [gamlss](https://cran.r-project.org/package=gamlss) implementation [1] and the [dsBaseClient](https://github.com/datashield/dsBaseClient) package [2].
