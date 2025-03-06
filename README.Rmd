@@ -52,7 +52,7 @@ Furthermore, to follow the example, the server-side packages `dsBase` and `dsGam
 ```{r, setup2, results="hide", message=FALSE, warning=FALSE}
 # install.packages("devtools")
 devtools::install_github("datashield/dsBase")
-#devtools::install_github("bips-hb/dsGamlss")
+devtools::install_github("bips-hb/dsGamlss")
 library(dsGamlssClient)
 library(DSLite)
 library(dsBase)

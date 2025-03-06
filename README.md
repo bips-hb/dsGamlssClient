@@ -86,7 +86,7 @@ at the DataSHIELD Wiki.
 ``` r
 # install.packages("devtools")
 devtools::install_github("datashield/dsBase")
-#devtools::install_github("bips-hb/dsGamlss")
+devtools::install_github("bips-hb/dsGamlss")
 library(dsGamlssClient)
 library(DSLite)
 library(dsBase)
