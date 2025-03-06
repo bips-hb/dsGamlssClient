@@ -1,8 +1,8 @@
 bibentry(
   bibtype  = "Misc",
-  title    = "dsGamlssClient",
+  title    = "dsGamlssClient: DataSHIELD client-side functions to fit generalized additive models for location, scale and shape",
   author   = "Annika Swenne",
-  year     = "2025",
+  year     = 2025,
   url      = "https://github.com/bibs-hb/dsGamlssClient",
   note     = "R package version 0.1.0"
 )
