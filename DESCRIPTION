@@ -24,6 +24,9 @@ Suggests:
     DSOpal,
     gamlss,
     testthat (>= 3.0.0)
+Remotes: 
+    datashield/dsBase
+    bips-hb/dsGamlss
 Config/testthat/edition: 3
 Encoding: UTF-8
 RoxygenNote: 7.3.2
