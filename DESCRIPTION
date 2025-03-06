@@ -11,7 +11,7 @@ Description: DataSHIELD client-side functions to fit Generalized Additive
     client-server infrastructure, so the dsGamlss package needs to be used
     in conjunction with the dsGamlssClient package.
 License: GPL (>= 3) + file LICENSE
-URL: https://github.com/bips-hb/dsGamlssClient
+URL: https://github.com/bips-hb/dsGamlssClient, https://bips-hb.github.io/dsGamlssClient/
 BugReports: https://github.com/bips-hb/dsGamlssClient/issues
 Imports: 
     DSI,
