@@ -162,7 +162,7 @@ model <- ds.gamlss(formula = mpg ~ pb(wt), sigma.formula = ~wt, data = "D", fami
 Note that this implies that the knots are different from a GAMLSS model
 that is fit to the whole `mctars` dataset, and hence the results from
 `ds.gamlss` are slightly different from the GAMLSS model that is fit to
-the whole data. However, this should not have a big impact on the
+the whole data. However, this should have no impact on the
 interpretation of the model.
 
 After the `ds.gamlss` model has been fit it can be used to predict the
