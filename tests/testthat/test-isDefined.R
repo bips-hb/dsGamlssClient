@@ -39,7 +39,7 @@ test_that("output_isDefined_dataframeD_columnA", {
 })
 
 test_that("output_isDefined_dataframeE_columnA", {
-  expect_error(isDefined(ds.test_env$connections, "E$A"), "There are some DataSHIELD errors:", fixed = TRUE)
+  expect_error(isDefined(ds.test_env$connections, "E$A"), "There are some DataSHIELD errors", fixed=TRUE)
 })
 
 # error.message = FALSE
@@ -85,7 +85,7 @@ test_that("output_isDefined_dataframeD_columnA_errormessageFALSE", {
 })
 
 test_that("output_isDefined_dataframeE_columnA_errormessageFALSE", {
-  expect_error(isDefined(ds.test_env$connections, "E$A", error.message = FALSE), "There are some DataSHIELD errors:", fixed = TRUE)
+  expect_error(isDefined(ds.test_env$connections, "E$A", error.message = FALSE), "There are some DataSHIELD errors", fixed = TRUE)
 })
 
 #
