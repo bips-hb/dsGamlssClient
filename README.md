@@ -15,7 +15,8 @@ for Location, Scale and Shape (GAMLSS) \[1\] using DataSHIELD. It is
 based on the original
 [gamlss](https://cran.r-project.org/package=gamlss) implementation \[1\]
 and the [dsBaseClient](https://github.com/datashield/dsBaseClient)
-package \[2\].
+package \[2\]. For additional methodological details, please see our
+accompanying paper \[3\].
 
 ### DataSHIELD
 
@@ -54,7 +55,7 @@ at the DataSHIELD Wiki.
 ## Example
 
 The example uses the server-less DataSHIELD implementation
-[DSLite](https://cran.r-project.org/package=DSLite) \[3\] to illustrate
+[DSLite](https://cran.r-project.org/package=DSLite) \[4\] to illustrate
 the use of the package’s main functions `ds.gamlss` and
 `ds.predict.gamlss`. Thus, access to a DataSHIELD server is not required
 to follow the example.
@@ -187,11 +188,34 @@ head(mu.response)
 
 ## References
 
-1.  Rigby RA, Stasinopoulos DM. Generalized additive models for
-    location, scale and shape. Journal of the Royal Statistical Society:
-    Series C (Applied Statistics). 2005;54(3):507-54.
+1.  Rigby RA, Stasinopoulos DM (2005). Generalized additive models for
+    location, scale and shape. *Journal of the Royal Statistical
+    Society: Series C (Applied Statistics)* *54*(3):507-54.
 2.  DataSHIELD Developers (2023). *dsBaseClient: DataSHIELD Client
     Functions*. R package version 6.3.0.
-3.  Marcon Y (2022). *DSLite: ‘DataSHIELD’ Implementation on Local
+3.  Swenne A, Intemann T, Moreno LA, Pigeot I (2025). *Federated
+    generalized additive models for location, scale and shape. BMC
+    Medical Research Methodology* *25*(276).
+4.  Marcon Y (2022). *DSLite: ‘DataSHIELD’ Implementation on Local
     Datasets*. R package version 1.4.0,
     <https://CRAN.R-project.org/package=DSLite>.
+
+## Citation
+
+If you use this package in your research, please cite if as follows:
+
+Swenne A, Intemann T, Moreno LA, Pigeot I (2025). Federated generalized
+additive models for location, scale and shape. *BMC Medical Research
+Methodology*, *25*(276). <https://doi.org/10.1186/s12874-025-02735-7>.
+
+``` bibtex
+@Article{,
+  author = {Annika Swenne and Timm Intemann and Luis A. Moreno and Iris Pigeot},
+  title = {Federated generalized additive models for location, scale and shape},
+  journal = {BMC Medical Research Methodology},
+  volume = {25},
+  number = {276},
+  doi = {10.1186/s12874-025-02735-7},
+  year = {2025},
+}
+```

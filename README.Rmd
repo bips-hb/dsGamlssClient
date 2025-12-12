@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/bips-hb/dsGamlssClient/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bips-hb/dsGamlssClient/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The `dsGamlssClient` package is a [DataSHIELD](https://www.datashield.org) client-side package that includes the server-side functions to fit Generalized Additive Models for Location, Scale and Shape (GAMLSS) [1] using DataSHIELD. It is based on the original [gamlss](https://cran.r-project.org/package=gamlss) implementation [1] and the [dsBaseClient](https://github.com/datashield/dsBaseClient) package [2].
+The `dsGamlssClient` package is a [DataSHIELD](https://www.datashield.org) client-side package that includes the server-side functions to fit Generalized Additive Models for Location, Scale and Shape (GAMLSS) [1] using DataSHIELD. It is based on the original [gamlss](https://cran.r-project.org/package=gamlss) implementation [1] and the [dsBaseClient](https://github.com/datashield/dsBaseClient) package [2]. For additional methodological details, please see our accompanying paper [3].
 
 ### DataSHIELD
 DataSHIELD is a software infrastructure which allows you to do non-disclosive federated analysis on sensitive data. The [DataSHIELD website](https://www.datashield.org) has in depth descriptions of what it is, how it works and how to install it. A key point to highlight is that DataSHIELD has a client-server infrastructure, so the `dsGamlssClient` package needs to be used in conjunction with the [dsGamlss](https://github.com/bips-hb/dsGamlss) package - trying to use one without the other makes no sense. Detailed instructions on how to install DataSHIELD can be found at the [DataSHIELD Wiki](https://www.datashield.org/wiki). Discussion and help with using DataSHIELD can be obtained from the [DataSHIELD Forum](https://datashield.discourse.group/).
@@ -38,7 +38,7 @@ To successfully run the package, the [dsBase](https://github.com/datashield/dsBa
 
 ## Example
 
-The example uses the server-less DataSHIELD implementation [DSLite](https://cran.r-project.org/package=DSLite) [3] to illustrate the use of the package's main functions `ds.gamlss` and `ds.predict.gamlss`. Thus, access to a DataSHIELD server is not required to follow the example. 
+The example uses the server-less DataSHIELD implementation [DSLite](https://cran.r-project.org/package=DSLite) [4] to illustrate the use of the package's main functions `ds.gamlss` and `ds.predict.gamlss`. Thus, access to a DataSHIELD server is not required to follow the example. 
 
 First, you need to install the `DSLite` package, which is available on [CRAN](https://cran.r-project.org/). 
 
@@ -111,6 +111,26 @@ head(mu.response)
 
 
 ## References
-1. Rigby RA, Stasinopoulos DM. Generalized additive models for location, scale and shape. Journal of the Royal Statistical Society: Series C (Applied Statistics). 2005;54(3):507-54.
+1. Rigby RA, Stasinopoulos DM (2005). Generalized additive models for location, scale and shape. _Journal of the Royal Statistical Society: Series C (Applied Statistics)_ *54*(3):507-54.
 2. DataSHIELD Developers (2023). _dsBaseClient: DataSHIELD Client Functions_. R package version 6.3.0.
-3. Marcon Y (2022). _DSLite: 'DataSHIELD' Implementation on Local Datasets_. R package version 1.4.0, <https://CRAN.R-project.org/package=DSLite>.
+3. Swenne A, Intemann T, Moreno LA, Pigeot I (2025). _Federated generalized additive models for location, scale and shape. BMC Medical Research Methodology_ *25*(276).
+4. Marcon Y (2022). _DSLite: 'DataSHIELD' Implementation on Local Datasets_. R package version 1.4.0, <https://CRAN.R-project.org/package=DSLite>.
+
+
+## Citation
+If you use this package in your research, please cite if as follows:
+
+Swenne A, Intemann T, Moreno LA, Pigeot I (2025). Federated generalized additive models for location, scale and shape. _BMC Medical Research Methodology_, *25*(276). <https://doi.org/10.1186/s12874-025-02735-7>.
+
+
+```bibtex
+@Article{,
+  author = {Annika Swenne and Timm Intemann and Luis A. Moreno and Iris Pigeot},
+  title = {Federated generalized additive models for location, scale and shape},
+  journal = {BMC Medical Research Methodology},
+  volume = {25},
+  number = {276},
+  doi = {10.1186/s12874-025-02735-7},
+  year = {2025},
+}
+```

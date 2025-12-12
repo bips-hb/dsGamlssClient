@@ -1,8 +1,16 @@
 bibentry(
-  bibtype  = "Misc",
-  title    = "dsGamlssClient: DataSHIELD client-side functions to fit generalized additive models for location, scale and shape",
-  author   = "Annika Swenne",
-  year     = 2025,
-  url      = "https://github.com/bips-hb/dsGamlssClient",
-  note     = "R package version 0.1.0"
+  bibtype  = "Article",
+  author = c(
+    person("Annika", "Swenne"),
+    person("Timm", "Intemann"),
+    person(c("Luis", "A."), "Moreno"),
+    person("Iris", "Pigeot")),
+  title = "Federated generalized additive models for location, scale and shape",
+  journal = "BMC Medical Research Methodology",
+  volume = 25,
+  number = 276,
+  doi = "10.1186/s12874-025-02735-7",
+  year = "2025",
+  textVersion = "Swenne A, Intemann T, Moreno LA, Pigeot I (2025). Federated generalized additive models for location, scale and shape. BMC Medical Research Methodology,
+  25(276). https://doi.org/10.1186/s12874-025-02735-7."
 )
