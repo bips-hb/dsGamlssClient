@@ -1,8 +1,8 @@
 pandoc: 3.1.11
-pkgdown: 2.1.2
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles: {}
-last_built: 2025-05-16T13:09Z
+last_built: 2025-12-12T14:07Z
 urls:
   reference: https://bips-hb.github.io/dsGamlssClient/reference
   article: https://bips-hb.github.io/dsGamlssClient/articles

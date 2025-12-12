@@ -51,7 +51,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>The <code>dsGamlssClient</code> package is a <a href="https://www.datashield.org" class="external-link">DataSHIELD</a> client-side package that includes the server-side functions to fit Generalized Additive Models for Location, Scale and Shape (GAMLSS) [1] using DataSHIELD. It is based on the original <a href="https://cran.r-project.org/package=gamlss" class="external-link">gamlss</a> implementation [1] and the <a href="https://github.com/datashield/dsBaseClient" class="external-link">dsBaseClient</a> package [2].</p>
+<p>The <code>dsGamlssClient</code> package is a <a href="https://www.datashield.org" class="external-link">DataSHIELD</a> client-side package that includes the server-side functions to fit Generalized Additive Models for Location, Scale and Shape (GAMLSS) [1] using DataSHIELD. It is based on the original <a href="https://cran.r-project.org/package=gamlss" class="external-link">gamlss</a> implementation [1] and the <a href="https://github.com/datashield/dsBaseClient" class="external-link">dsBaseClient</a> package [2]. For additional methodological details, please see our accompanying paper [3].</p>
 <div class="section level3">
 <h3 id="datashield">DataSHIELD<a class="anchor" aria-label="anchor" href="#datashield"></a>
 </h3>
@@ -69,7 +69,7 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>The example uses the server-less DataSHIELD implementation <a href="https://cran.r-project.org/package=DSLite" class="external-link">DSLite</a> [3] to illustrate the use of the package’s main functions <code>ds.gamlss</code> and <code>ds.predict.gamlss</code>. Thus, access to a DataSHIELD server is not required to follow the example.</p>
+<p>The example uses the server-less DataSHIELD implementation <a href="https://cran.r-project.org/package=DSLite" class="external-link">DSLite</a> [4] to illustrate the use of the package’s main functions <code>ds.gamlss</code> and <code>ds.predict.gamlss</code>. Thus, access to a DataSHIELD server is not required to follow the example.</p>
 <p>First, you need to install the <code>DSLite</code> package, which is available on <a href="https://cran.r-project.org/" class="external-link">CRAN</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"DSLite"</span>, repos <span class="op">=</span> <span class="st">"https://cloud.r-project.org/"</span><span class="op">)</span></span></code></pre></div>
@@ -145,10 +145,26 @@
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <ol style="list-style-type: decimal">
-<li>Rigby RA, Stasinopoulos DM. Generalized additive models for location, scale and shape. Journal of the Royal Statistical Society: Series C (Applied Statistics). 2005;54(3):507-54.</li>
+<li>Rigby RA, Stasinopoulos DM (2005). Generalized additive models for location, scale and shape. <em>Journal of the Royal Statistical Society: Series C (Applied Statistics)</em> <em>54</em>(3):507-54.</li>
 <li>DataSHIELD Developers (2023). <em>dsBaseClient: DataSHIELD Client Functions</em>. R package version 6.3.0.</li>
+<li>Swenne A, Intemann T, Moreno LA, Pigeot I (2025). <em>Federated generalized additive models for location, scale and shape. BMC Medical Research Methodology</em> <em>25</em>(276).</li>
 <li>Marcon Y (2022). <em>DSLite: ‘DataSHIELD’ Implementation on Local Datasets</em>. R package version 1.4.0, <a href="https://CRAN.R-project.org/package=DSLite" class="external-link uri">https://CRAN.R-project.org/package=DSLite</a>.</li>
 </ol>
+</div>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
+<p>If you use this package in your research, please cite if as follows:</p>
+<p>Swenne A, Intemann T, Moreno LA, Pigeot I (2025). Federated generalized additive models for location, scale and shape. <em>BMC Medical Research Methodology</em>, <em>25</em>(276). <a href="https://doi.org/10.1186/s12874-025-02735-7" class="external-link uri">https://doi.org/10.1186/s12874-025-02735-7</a>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bibtex"><code class="sourceCode bibtex"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="va">@Article</span>{,</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="dt">author</span> = {Annika Swenne and Timm Intemann and Luis A. Moreno and Iris Pigeot},</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="dt">title</span> = {Federated generalized additive models for location, scale and shape},</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="dt">journal</span> = {BMC Medical Research Methodology},</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="dt">volume</span> = {25},</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="dt">number</span> = {276},</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="dt">doi</span> = {10.1186/s12874-025-02735-7},</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  <span class="dt">year</span> = {2025},</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -198,7 +214,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
